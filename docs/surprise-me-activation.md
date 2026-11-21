@@ -15,7 +15,7 @@
 2. Apply `supabase/migrations/20261122_base88_business_drafts.sql`.
 3. Apply `supabase/migrations/20261122_base88_business_inbox.sql`.
 4. Verify RLS is enabled and FORCE RLS for both tables, and that `anon` has no direct table privileges.
-5. Configure the expected `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` for the PREVIEW environment. **Do not expose the service-role key.**
+5. Configure the expected `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` for the PREVIEW environment. **Do not expose the service-role key.** Before enabling any private preview route, set `BASE88_STAGING_PROJECT_REF` to the exact staging Supabase project reference and `BASE88_PRODUCTION_SUPABASE_PROJECT_REF` to the existing production reference (both 20 lowercase alphanumeric characters, and they must differ). Only after staged migrations and two-user RLS tests, explicitly set `BASE88_PREVIEW_DATA_ACCESS_ENABLED=yes`. A missing production reference keeps the preview locked.
 6. Create two distinct test users in that staging project. Do not paste their tokens into a chat, README or PR.
 7. Run the opt-in two-account RLS probe **only on disposable staging**:
 
@@ -64,3 +64,6 @@ Do not put private backend secrets, model endpoints, container sockets, credenti
 - Test with two different staging users, invalid/wrong-project/expired JWTs, and one draft imported twice. Verify provider/API request failures do not leak the token or infrastructure details.
 - This is a **code-complete bridge**, not evidence of an active backend deployment. The missing Supabase staging connection and separate worker host must be configured before live verification.
 
+
+## Preview release lock (November 22, 2026)
+Preview private routes stay blocked unless the opt-in flag is `yes`, the staging URL exactly matches its project reference, and the production reference is different. CI covers same-project rejection, missing references, malicious hostnames, invalid URLs, and credentials embedded in URLs. This is a configuration-safety gate, not proof of real database isolation or permission to launch.
