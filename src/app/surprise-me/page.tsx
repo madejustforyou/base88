@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { generateStarterSite } from '@/lib/surprise-site'
 import { generateStarterProduct } from '@/lib/surprise-product'
+import { createLaunchZip } from '@/lib/zip-store'
 
 type Idea = {
   name: string
@@ -214,6 +215,23 @@ export default function SurpriseMePage() {
     setNotice('Launch brief exported locally. This does not create or publish a business.')
   }
 
+  function downloadLaunchPack() {
+    if (!selected) return
+    const prefix = selected.name.toLowerCase().replace(/[^a-z0-9-]/g,'-')
+    const archive = createLaunchZip([
+      {name:prefix+'-business-brief.md', content:launchMarkdown(selected)},
+      {name:prefix+'-starter-product.md',content:generateStarterProduct(selected)},
+      {name:prefix+'-starter-website.html',content:generateStarterSite(selected)},
+    ])
+    const href = URL.createObjectURL(new Blob([archive],{type:'application/zip'}))
+    const anchor = document.createElement('a')
+    anchor.href = href
+    anchor.download = prefix+'-base88-launch-pack.zip'
+    anchor.click()
+    URL.revokeObjectURL(href)
+    setNotice('Complete launch pack exported. It is a draft: no website published, account connected or payment taken.')
+  }
+
   function downloadProduct() {
     if (!selected) return
     const filename = selected.name.toLowerCase().replace(/[^a-z0-9-]/g,'-') + '-starter-product.md'
@@ -307,7 +325,8 @@ export default function SurpriseMePage() {
             </div>}
           </div>
           <div style={{display:'flex',flexWrap:'wrap',gap:12,marginTop:23}}>
-            <button onClick={download} style={button}>Download complete launch brief</button>
+            <button onClick={downloadLaunchPack} style={{...button,background:'#347e6e',borderColor:'#5be7c3'}}>Download complete launch pack (.zip)</button>
+            <button onClick={download} style={button}>Download launch brief</button>
             <button onClick={saveDraft} disabled={saving} style={{...button,background:'#235748',borderColor:'#54be9d',opacity:saving?.65:1}}>{saving?'Saving…':'Save to my account'}</button>
             <button onClick={()=>setSiteVisible(!siteVisible)} style={{...button,background:'#343458'}}>{siteVisible?'Hide starter website':'Preview starter website'}</button>
             <button onClick={downloadSite} style={{...button,background:'#343458'}}>Download website HTML</button>
