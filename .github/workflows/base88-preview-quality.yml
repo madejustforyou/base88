@@ -31,6 +31,11 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Test offline generated business sites
         run: node --experimental-strip-types --test tests/surprise-site.test.mjs
+      - name: Verify launch ZIP export using Python's standard ZIP reader
+        run: |
+          node --experimental-strip-types --test tests/zip-store.test.mjs
+          python3 -m zipfile -t /tmp/base88-launch-test.zip
+          node --check tests/rls-staging-only.mjs
       - name: Build complete Next.js preview
         # Public test values only. No real Supabase credentials or customer data in CI.
         # This checks compilation, NOT live Supabase connectivity.
