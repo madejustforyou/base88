@@ -1,5 +1,6 @@
 import {NextRequest,NextResponse} from 'next/server'
 import {authenticatedBusinessClient} from '@/lib/base88-auth'
+import {engineOrigin} from '@/lib/base88-engine'
 
 export const dynamic = 'force-dynamic'
 type RouteContext={params:Promise<{id:string}>}
@@ -7,19 +8,6 @@ const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 function reply(body:unknown,status=200){
   return NextResponse.json(body,{status,headers:{'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}})
-}
-
-function engineOrigin(){
-  const raw=process.env.BASE88_ENGINE_URL
-  if(!raw)return null
-  try{
-    const u=new URL(raw)
-    if(u.protocol!=='https:'||u.username||u.password||u.pathname!=='/'||u.search||u.hash)
-      return null
-    if(!u.hostname||u.hostname==='localhost'||u.hostname.endsWith('.local')||u.hostname.endsWith('.internal'))
-      return null
-    return u.origin
-  }catch{return null}
 }
 
 function str(value:unknown,min:number,max:number){
@@ -39,8 +27,11 @@ export async function POST(request:NextRequest,ctx:RouteContext){
   if(error)return reply({error:'Business draft storage is not yet activated.'},503)
   if(!data)return reply({error:'Draft not found.'},404)
 
-  const engine=engineOrigin()
-  if(!engine)return reply({error:'The independent Base88 engine is not deployed yet.'},503)
+  // Apply the same HTTPS, credential, local-host and literal-IP checks as all
+  // other engine routes before forwarding an authenticated customer JWT.
+  let engine:string
+  try{engine=engineOrigin()}
+  catch{return reply({error:'The independent Base88 engine is not deployed yet.'},503)}
   const brief=data.brief
   if(!brief||typeof brief!=='object'||Array.isArray(brief))
     return reply({error:'Saved draft format is invalid.'},409)
