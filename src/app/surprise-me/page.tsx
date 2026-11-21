@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { supabase } from '@/lib/supabase'
 
 type Idea = {
   name: string
@@ -134,6 +135,58 @@ export default function SurpriseMePage() {
   const [focus, setFocus] = useState('Any viable category')
   const [notice, setNotice] = useState('')
   const [showOperations, setShowOperations] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [loadingSaved, setLoadingSaved] = useState(false)
+  const [showSaved, setShowSaved] = useState(false)
+  const [savedError, setSavedError] = useState('')
+  const [savedDrafts, setSavedDrafts] = useState<Array<{id:string;name:string;category:string;brief:Idea;created_at:string}>>([])
+
+  async function accountToken() {
+    const {data, error} = await supabase.auth.getSession()
+    if (error || !data.session?.access_token) {
+      setNotice('Please sign in to Base88 to save or view business drafts.')
+      return null
+    }
+    return data.session.access_token
+  }
+
+  async function saveDraft() {
+    if (!selected || saving) return
+    const token = await accountToken()
+    if (!token) return
+    setSaving(true)
+    try {
+      const response = await fetch('/api/business-drafts', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+        body:JSON.stringify(selected),
+        cache:'no-store',
+      })
+      const data = await response.json()
+      if (!response.ok) {setNotice(data.error || 'Could not save the business draft.');return}
+      setNotice('Business draft saved privately to your Base88 account. It is not launched.')
+      if (showSaved) await loadSaved(token)
+    } catch {setNotice('Unable to connect to business draft storage.')}
+    finally {setSaving(false)}
+  }
+
+  async function loadSaved(existingToken?: string) {
+    const token = existingToken || await accountToken()
+    if (!token) return
+    setLoadingSaved(true)
+    setShowSaved(true)
+    setSavedError('')
+    try {
+      const response = await fetch('/api/business-drafts', {
+        method:'GET',headers:{'Authorization':'Bearer '+token},cache:'no-store'
+      })
+      const data = await response.json()
+      if (!response.ok) {setSavedError(data.error || 'Could not load saved drafts.');return}
+      setSavedDrafts(data.drafts || [])
+    } catch {setSavedError('Unable to retrieve your private drafts.')}
+    finally {setLoadingSaved(false)}
+  }
+
 
   function generate() {
     const pool = focus === 'Any viable category' ? ideas : ideas.filter(x => x.category === focus)
@@ -225,6 +278,7 @@ export default function SurpriseMePage() {
           </div>
           <div style={{display:'flex',flexWrap:'wrap',gap:12,marginTop:23}}>
             <button onClick={download} style={button}>Download complete launch brief</button>
+            <button onClick={saveDraft} disabled={saving} style={{...button,background:'#235748',borderColor:'#54be9d',opacity:saving?.65:1}}>{saving?'Saving…':'Save to my account'}</button>
             <button onClick={generate} style={{...button,background:'transparent',color:'#e4dfff'}}>Try another business</button>
           </div>
           <div role="status" style={{fontSize:13,color:'#8eefd1',marginTop:15}}>{notice}</div>
@@ -233,6 +287,24 @@ export default function SurpriseMePage() {
           <p style={{fontSize:20,fontWeight:700,marginBottom:8}}>Your next business starts with one click</p>
           <p style={{color:'#aaaeca',fontSize:14}}>No signup or payment required to explore a concept.</p>
         </div>}
+        <section style={{...panel,marginTop:30}} aria-label="My saved business drafts">
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:14,flexWrap:'wrap'}}>
+            <div>
+              <h2 style={{fontSize:21,marginBottom:5}}>My business drafts</h2>
+              <p style={{fontSize:13,color:'#aeb4cc'}}>Sign in to retrieve the ideas you saved privately to Base88.</p>
+            </div>
+            <button onClick={()=>loadSaved()} disabled={loadingSaved} style={{...button,background:'#2e304b',borderColor:'#565677'}}>{loadingSaved?'Loading…':'View my saved ideas'}</button>
+          </div>
+          {showSaved && <div style={{marginTop:20,display:'grid',gap:10}}>
+            {savedError ? <p role="alert" style={{color:'#f2b7ab',fontSize:14}}>{savedError}</p> :
+            savedDrafts.length===0 ? <p style={{color:'#aeb4cc',fontSize:14}}>No saved drafts to display.</p> :
+            savedDrafts.map(d=>
+              <button key={d.id} onClick={()=>{setSelected(d.brief);setNotice('Saved business draft opened. No live business has been launched.')}} style={{textAlign:'left',background:'#1e2035',border:'1px solid #464866',padding:16,borderRadius:12,color:'#f2efff',cursor:'pointer',display:'flex',justifyContent:'space-between',gap:12}}>
+                <strong>{d.name}</strong><span style={{fontSize:13,color:'#9fadc4'}}>{d.category}</span>
+              </button>
+            )}
+          </div>}
+        </section>
         <p style={{fontSize:13,color:'#9399af',marginTop:36,lineHeight:1.7,borderTop:'1px solid #35374a',paddingTop:20}}>Preview feature only: This page does not incorporate a company, deploy a website, create an inbox, contact customers, charge payments, or run a persistent AI agent. Those capabilities require authenticated services, separate approvals, and verified execution.</p>
       </section>
     </main>
