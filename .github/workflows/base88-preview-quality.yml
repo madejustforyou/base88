@@ -32,4 +32,10 @@ jobs:
       - name: Test offline generated business sites
         run: node --experimental-strip-types --test tests/surprise-site.test.mjs
       - name: Build complete Next.js preview
+        # Public test values only. No real Supabase credentials or customer data in CI.
+        # This checks compilation, NOT live Supabase connectivity.
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://example.invalid
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: build-only-not-an-actual-credential
+          NEXT_TELEMETRY_DISABLED: '1'
         run: npm run build
