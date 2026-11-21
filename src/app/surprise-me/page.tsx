@@ -97,6 +97,11 @@ const ideas: Idea[] = [
   }
 ]
 
+function safeFileSlug(value: string) {
+  return value.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-+|-+$/g,'').slice(0,46) || 'business'
+}
+
 const panel = {background: '#131322', border:'1px solid #2a2b42', borderRadius: 22, padding: 24} as const
 const button = {padding:'13px 20px',borderRadius:12,border:'1px solid #6e60df',background:'#7467f4',color:'#fff',fontWeight:750,cursor:'pointer'} as const
 
@@ -209,7 +214,7 @@ export default function SurpriseMePage() {
     const href = URL.createObjectURL(file)
     const a = document.createElement('a')
     a.href = href
-    a.download = selected.name.toLowerCase().replace(/[^a-z0-9-]/g,'-') + '-base88-launch-brief.md'
+    a.download = safeFileSlug(selected.name) + '-base88-launch-brief.md'
     a.click()
     URL.revokeObjectURL(href)
     setNotice('Launch brief exported locally. This does not create or publish a business.')
@@ -217,7 +222,7 @@ export default function SurpriseMePage() {
 
   function downloadLaunchPack() {
     if (!selected) return
-    const prefix = selected.name.toLowerCase().replace(/[^a-z0-9-]/g,'-')
+    const prefix = safeFileSlug(selected.name)
     const archive = createLaunchZip([
       {name:prefix+'-business-brief.md', content:launchMarkdown(selected)},
       {name:prefix+'-starter-product.md',content:generateStarterProduct(selected)},
@@ -234,7 +239,7 @@ export default function SurpriseMePage() {
 
   function downloadProduct() {
     if (!selected) return
-    const filename = selected.name.toLowerCase().replace(/[^a-z0-9-]/g,'-') + '-starter-product.md'
+    const filename = safeFileSlug(selected.name) + '-starter-product.md'
     const blob = new Blob([generateStarterProduct(selected)], {type:'text/markdown;charset=utf-8'})
     const href = URL.createObjectURL(blob)
     const anchor = document.createElement('a')
@@ -247,7 +252,7 @@ export default function SurpriseMePage() {
 
   function downloadSite() {
     if (!selected) return
-    const filename = selected.name.toLowerCase().replace(/[^a-z0-9-]/g, '-') + '-starter-site.html'
+    const filename = safeFileSlug(selected.name) + '-starter-site.html'
     const blob = new Blob([generateStarterSite(selected)], {type:'text/html;charset=utf-8'})
     const href = URL.createObjectURL(blob)
     const anchor = document.createElement('a')
