@@ -1,6 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { generateStarterSite } from '../src/lib/surprise-site.ts'
+import { generateStarterProduct } from '../src/lib/surprise-product.ts'
 
 const safe = {
   name: 'DetailNudge',
@@ -46,4 +47,22 @@ test('generator cannot turn a draft into live checkout or contact', () => {
   assert.doesNotMatch(html, /<input|<form|stripe\.com|mailto:/i)
   assert.match(html, /No payments can be taken/)
   assert.match(html, /No merchant, inbox, booking or payment integration is active/)
+})
+
+test('starter product is genuinely editable and category-specific', () => {
+  const text = generateStarterProduct({...safe, category:'Auto services'})
+  assert.match(text, /Five editable customer messages/)
+  assert.match(text, /vehicle/)
+  assert.match(text, /\[first name\]/)
+  assert.match(text, /Customer.*Request.*Stage/)
+  assert.match(text, /Owner|owner/)
+  assert.match(text, /Checkout remains disabled/)
+  assert.doesNotMatch(text, /guaranteed sales|proven revenue/i)
+})
+
+test('product generator does not claim to send messages or charge the owner', () => {
+  const text = generateStarterProduct({...safe, category:'Pet services'})
+  assert.match(text, /\[pet name\]/)
+  assert.match(text, /never sends a message/)
+  assert.match(text, /not a verified sale/i)
 })
