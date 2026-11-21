@@ -1,4 +1,5 @@
 import type { NextRequest } from 'next/server'
+import { isIP } from 'node:net'
 import { authenticatedBusinessClient } from '@/lib/base88-auth'
 
 export type EngineContext = {
@@ -20,7 +21,7 @@ export function engineOrigin():string {
     const u=new URL(raw)
     if(u.protocol!=='https:'||u.username||u.password||u.pathname!=='/'||
        u.search||u.hash||u.hostname==='localhost'||u.hostname.endsWith('.local')||
-       u.hostname.endsWith('.internal')||u.hostname==='0.0.0.0')
+       u.hostname.endsWith('.internal')||isIP(u.hostname.replace(/^\[|\]$/g,''))!==0)
       throw new Error('Invalid engine target')
     return u.origin
   }catch{throw new EngineError(503,'Independent Base88 engine configuration is invalid.')}
