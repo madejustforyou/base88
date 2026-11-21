@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { generateStarterSite } from '@/lib/surprise-site'
+import { generateStarterProduct } from '@/lib/surprise-product'
 
 type Idea = {
   name: string
@@ -213,6 +214,19 @@ export default function SurpriseMePage() {
     setNotice('Launch brief exported locally. This does not create or publish a business.')
   }
 
+  function downloadProduct() {
+    if (!selected) return
+    const filename = selected.name.toLowerCase().replace(/[^a-z0-9-]/g,'-') + '-starter-product.md'
+    const blob = new Blob([generateStarterProduct(selected)], {type:'text/markdown;charset=utf-8'})
+    const href = URL.createObjectURL(blob)
+    const anchor = document.createElement('a')
+    anchor.href = href
+    anchor.download = filename
+    anchor.click()
+    URL.revokeObjectURL(href)
+    setNotice('Editable starter product exported. Review it before selling or publishing.')
+  }
+
   function downloadSite() {
     if (!selected) return
     const filename = selected.name.toLowerCase().replace(/[^a-z0-9-]/g, '-') + '-starter-site.html'
@@ -297,6 +311,7 @@ export default function SurpriseMePage() {
             <button onClick={saveDraft} disabled={saving} style={{...button,background:'#235748',borderColor:'#54be9d',opacity:saving?.65:1}}>{saving?'Saving…':'Save to my account'}</button>
             <button onClick={()=>setSiteVisible(!siteVisible)} style={{...button,background:'#343458'}}>{siteVisible?'Hide starter website':'Preview starter website'}</button>
             <button onClick={downloadSite} style={{...button,background:'#343458'}}>Download website HTML</button>
+            <button onClick={downloadProduct} style={{...button,background:'#343458'}}>Download starter product</button>
             <button onClick={generate} style={{...button,background:'transparent',color:'#e4dfff'}}>Try another business</button>
           </div>
           <div role="status" style={{fontSize:13,color:'#8eefd1',marginTop:15}}>{notice}</div>
