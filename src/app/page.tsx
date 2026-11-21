@@ -40,7 +40,7 @@ export default function Home() {
           <Link href="/surprise-me" style={{color:'#8ddcc6',fontSize:14,fontWeight:700,textDecoration:'none'}}>Surprise Me ✦</Link>
           <a href="#features" style={{color:'#6b6b8a',fontSize:14,fontWeight:500,textDecoration:'none'}}>Features</a>
           <a href="#pricing" style={{color:'#6b6b8a',fontSize:14,fontWeight:500,textDecoration:'none'}}>Pricing</a>
-          <a href="#testimonials" style={{color:'#6b6b8a',fontSize:14,fontWeight:500,textDecoration:'none'}}>Reviews</a>
+          <a href="#principles" style={{color:'#6b6b8a',fontSize:14,fontWeight:500,textDecoration:'none'}}>Principles</a>
           <Link href="/auth/login" style={{color:'#6b6b8a',fontSize:14,fontWeight:500,textDecoration:'none'}}>Login</Link>
           <Link href="/auth/signup" className="btn-primary" style={{padding:'9px 20px',fontSize:14}}>Get started free →</Link>
         </div>
@@ -53,7 +53,7 @@ export default function Home() {
         <div style={{position:'relative',zIndex:1}}>
           <div style={{display:'inline-flex',alignItems:'center',gap:8,background:'rgba(124,111,255,0.1)',border:'1px solid rgba(124,111,255,0.25)',borderRadius:100,padding:'7px 18px',fontSize:12,fontWeight:700,color:'#7c6fff',letterSpacing:.5,textTransform:'uppercase',marginBottom:32}}>
             <span className="pulse" style={{width:6,height:6,borderRadius:'50%',background:'#1ef5b0',display:'inline-block'}} />
-            Live · Trusted by 500+ Singapore businesses
+            Preview · Independent Base88 platform
           </div>
           <h1 className="hero-h1" style={{fontSize:'5rem',fontWeight:900,lineHeight:1.02,letterSpacing:'-2px',maxWidth:900,margin:'0 auto 28px'}}>
             Build AI agents that<br/>
@@ -61,7 +61,7 @@ export default function Home() {
             while you sleep
           </h1>
           <p style={{fontSize:'1.2rem',color:'#6b6b8a',maxWidth:560,margin:'0 auto 48px',lineHeight:1.7}}>
-            Describe what you need in plain English. Base88 builds a fully working AI agent — with memory, automations, integrations, and payments — in under 60 seconds.
+            Explore Base88's independent AI business-building platform. Create a zero-upfront business concept with Surprise Me, then review planned autonomous agents, integrations, and payments.
           </p>
           <div style={{display:'flex',gap:14,justifyContent:'center',flexWrap:'wrap',marginBottom:56}}>
             <Link href="/auth/signup" className="btn-primary" style={{padding:'16px 36px',fontSize:'1rem',boxShadow:'0 0 48px rgba(124,111,255,0.45)'}}>
@@ -79,7 +79,7 @@ export default function Home() {
               ))}
             </div>
             <span style={{color:'#f59e0b',fontSize:16}}>★★★★★</span>
-            <span>Loved by 500+ businesses</span>
+            <span>Explore the Base88 preview</span>
           </div>
         </div>
       </section>
@@ -96,7 +96,7 @@ export default function Home() {
           <div className="bento-card" style={{gridColumn:'span 7'}}>
             <div style={{width:52,height:52,borderRadius:16,background:'rgba(124,111,255,0.15)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}>🤖</div>
             <div style={{fontWeight:800,fontSize:'1.1rem',marginBottom:8,letterSpacing:'-.3px'}}>AI Agent Builder</div>
-            <div style={{fontSize:14,color:'#6b6b8a',lineHeight:1.6,marginBottom:20}}>Create intelligent agents with memory and personality. Connect to WhatsApp, Telegram, Gmail, and 50+ integrations. Your agent works 24/7 — no babysitting needed.</div>
+            <div style={{fontSize:14,color:'#6b6b8a',lineHeight:1.6,marginBottom:20}}>Create intelligent agents with memory and personality. Plan connections to supported services as integrations are verified. Your agent works 24/7 — no babysitting needed.</div>
             <div style={{background:'rgba(0,0,0,0.3)',borderRadius:16,padding:20,border:'1px solid var(--border)'}}>
               <div style={{display:'flex',gap:10,marginBottom:12}}>
                 <div style={{width:28,height:28,borderRadius:'50%',background:'rgba(124,111,255,0.2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13}}>👤</div>
@@ -129,7 +129,7 @@ export default function Home() {
           {/* Card 4 */}
           <div className="bento-card" style={{gridColumn:'span 4'}}>
             <div style={{width:52,height:52,borderRadius:16,background:'rgba(255,77,109,0.12)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}>🔌</div>
-            <div style={{fontWeight:800,fontSize:'1.1rem',marginBottom:8}}>50+ Integrations</div>
+            <div style={{fontWeight:800,fontSize:'1.1rem',marginBottom:8}}>Integration roadmap</div>
             <div style={{fontSize:14,color:'#6b6b8a',lineHeight:1.6}}>WhatsApp, Telegram, Gmail, Google Sheets, Slack, HitPay, PayNow, Stripe, and more.</div>
           </div>
           {/* Card 5 */}
@@ -164,24 +164,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section id="testimonials" style={{padding:'100px 24px',background:'linear-gradient(180deg,transparent,rgba(124,111,255,0.04),transparent)'}}>
+      {/* TRUST PRINCIPLES */}
+      <section id="principles" style={{padding:'100px 24px',background:'linear-gradient(180deg,transparent,rgba(124,111,255,0.04),transparent)'}}>
         <div style={{maxWidth:1100,margin:'0 auto',textAlign:'center'}}>
-          <div style={{fontSize:11,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:'#7c6fff',marginBottom:12}}>Testimonials</div>
-          <h2 style={{fontSize:'2.5rem',fontWeight:900,letterSpacing:'-1px',marginBottom:48}}>Businesses that switched to Base88</h2>
-          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))',gap:20}}>
+          <div style={{fontSize:11,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:'#7c6fff',marginBottom:12}}>Built for accountability</div>
+          <h2 style={{fontSize:'2.5rem',fontWeight:900,letterSpacing:'-1px',marginBottom:48}}>Show the evidence. Earn the trust.</h2>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(250px,1fr))',gap:20,textAlign:'left'}}>
             {[
-              {text:'"We replaced 4 different tools with Base88. Our WhatsApp agent handles 80% of customer enquiries — without us lifting a finger."',name:'Ravi Sharma',role:'Founder, ShopSG',grad:'135deg,#7c6fff,#1ef5b0'},
-              {text:'"Built a full booking system in 3 minutes. Customers book, pay via PayNow, and get confirmations automatically. Insane."',name:'Michelle Tan',role:'Owner, Bloom Studios',grad:'135deg,#ff6b35,#f7c948'},
-              {text:'"Been using Base44 for a year. Switched to Base88 — it\'s faster, smarter, and the agents are actually intelligent. No going back."',name:'Kevin Lim',role:'CTO, NexusTech',grad:'135deg,#38bdf8,#818cf8'},
-            ].map((t,i)=>(
-              <div key={i} className="testi">
-                <div style={{color:'#f59e0b',marginBottom:14,fontSize:14}}>★★★★★</div>
-                <p style={{fontSize:15,lineHeight:1.7,marginBottom:20,color:'#e8e8f0'}}>{t.text}</p>
-                <div style={{display:'flex',alignItems:'center',gap:12}}>
-                  <div style={{width:42,height:42,borderRadius:'50%',background:`linear-gradient(${t.grad})`,display:'flex',alignItems:'center',justifyContent:'center',fontWeight:800,fontSize:16}}>{t.name[0]}</div>
-                  <div><div style={{fontWeight:700,fontSize:14}}>{t.name}</div><div style={{fontSize:12,color:'#6b6b8a'}}>{t.role}</div></div>
-                </div>
+              {title:'Real outputs, not just promises',text:'Every meaningful AI workflow should produce inspectable files, tests and an activity record.'},
+              {title:'Owner control by default',text:'Customer contact, publication and spending must follow explicit account permissions.'},
+              {title:'Independent infrastructure',text:'Base88 is developed with our own source code rather than a Base44 application dependency.'},
+            ].map(item=>(
+              <div key={item.title} className="testi">
+                <div style={{color:'#1ef5b0',fontWeight:800,marginBottom:14}}>✓</div>
+                <div style={{fontSize:18,fontWeight:800,marginBottom:12}}>{item.title}</div>
+                <p style={{fontSize:15,lineHeight:1.7,color:'#b0b0c9'}}>{item.text}</p>
               </div>
             ))}
           </div>
@@ -225,7 +222,7 @@ export default function Home() {
             Your competitors are already<br/>
             <span className="grad-text">using AI agents</span>
           </h2>
-          <p style={{fontSize:'1.1rem',color:'#6b6b8a',maxWidth:480,margin:'0 auto 48px',lineHeight:1.7}}>Don't get left behind. Build your first agent in 60 seconds — no credit card, no code, no excuses.</p>
+          <p style={{fontSize:'1.1rem',color:'#6b6b8a',maxWidth:480,margin:'0 auto 48px',lineHeight:1.7}}>Don't get left behind. Explore a business idea with Surprise Me — no credit card required for the preview.</p>
           <Link href="/auth/signup" className="btn-primary" style={{padding:'18px 48px',fontSize:'1.1rem',boxShadow:'0 0 80px rgba(124,111,255,0.5)'}}>
             Build your agent free →
           </Link>
