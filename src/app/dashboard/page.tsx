@@ -14,6 +14,8 @@ export default function Dashboard() {
   const [drafts,setDrafts]=useState<Draft[]>([])
   const [storageReady,setStorageReady]=useState(false)
   const [storageNotice,setStorageNotice]=useState('')
+  const [engineNotice,setEngineNotice]=useState('')
+  const [importing,setImporting]=useState<string|null>(null)
 
   const loadDrafts=useCallback(async(jwt:string)=>{
     try{
@@ -50,6 +52,25 @@ export default function Dashboard() {
     })
     return ()=>{active=false}
   },[router,loadDrafts])
+
+  const importIntoEngine=async(draft:Draft)=>{
+    if(importing)return
+    setEngineNotice('')
+    setImporting(draft.id)
+    try{
+      const session=await supabase.auth.getSession()
+      const jwt=session.data.session?.access_token
+      if(!jwt){setEngineNotice('Sign in again to import your draft.');return}
+      const res=await fetch('/api/business-drafts/'+encodeURIComponent(draft.id)+'/engine',{
+        method:'POST',headers:{Authorization:'Bearer '+jwt},cache:'no-store'
+      })
+      const data=await res.json()
+      if(!res.ok){setEngineNotice(data.error||'The independent engine is unavailable.');return}
+      setEngineNotice((data.created?'Private engine workspace created':'Existing engine workspace retrieved')+
+        ' for '+draft.name+'. No customer messaging, payments, or public launch was started.')
+    }catch{setEngineNotice('The independent Base88 engine could not be reached.')}
+    finally{setImporting(null)}
+  }
 
   const handleSignOut=async()=>{
     await supabase.auth.signOut()
@@ -113,13 +134,20 @@ export default function Dashboard() {
         </div>
         {storageNotice && <p role="status" className="bg-amber-800/20 border border-amber-500/20 p-4 rounded-xl text-amber-200 text-sm mb-5">{storageNotice} Account data has not been loaded or fabricated.</p>}
         {storageReady && drafts.length===0 && <p className="text-gray-400 text-sm">No saved businesses yet. Use Surprise Me to create and save your first concept.</p>}
+        {engineNotice && <p role="status" className="bg-emerald-800/20 border border-emerald-500/20 p-4 rounded-xl text-emerald-200 text-sm mb-5">{engineNotice}</p>}
         <div className="grid gap-3">
           {drafts.map(d=><div key={d.id} className="bg-white/5 border border-white/10 rounded-xl p-5 flex items-center justify-between flex-wrap gap-3">
             <div>
               <div className="text-white font-bold">{d.name}</div>
               <div className="text-gray-400 text-xs mt-1">{d.category} · Draft only</div>
             </div>
-            <Link className="text-emerald-300 text-sm underline" href={'/business-drafts/'+d.id+'/inbox'}>Open test inbox</Link>
+            <div className="flex flex-wrap gap-4 items-center">
+              <Link className="text-emerald-300 text-sm underline" href={'/business-drafts/'+d.id+'/inbox'}>Open test inbox</Link>
+              <button disabled={importing!==null} onClick={()=>void importIntoEngine(d)}
+                className="bg-violet-700 hover:bg-violet-600 disabled:opacity-50 text-white rounded-lg px-4 py-2 text-sm font-semibold">
+                {importing===d.id?'Connecting…':'Prepare in independent engine'}
+              </button>
+            </div>
           </div>)}
         </div>
       </section>
