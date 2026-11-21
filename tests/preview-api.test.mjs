@@ -51,3 +51,28 @@ test('private engine draft import refuses anonymous requests',async()=>{
   const json=await res.json()
   assert.match(json.error,/sign in/i)
 })
+
+test('private task list and actions require authenticated ownership',async()=>{
+  const draft='11111111-1111-4111-8111-111111111111'
+  const basePath=base+'/api/business-drafts/'+draft+'/engine/tasks'
+  const list=await fetch(basePath)
+  assert.equal(list.status,401)
+  const action=await fetch(basePath,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'propose',kind:'landing_page'})})
+  assert.equal(action.status,401)
+})
+
+test('private engine task route rejects malformed JSON without backend access',async()=>{
+  const draft='11111111-1111-4111-8111-111111111111'
+  const res=await fetch(base+'/api/business-drafts/'+draft+'/engine/tasks',{
+    method:'POST',headers:{'Content-Type':'application/json'},body:'{broken'
+  })
+  assert.equal(res.status,400)
+})
+
+test('private verified artifact download cannot be accessed anonymously',async()=>{
+  const draft='11111111-1111-4111-8111-111111111111'
+  const artifact='a'.repeat(32)
+  const res=await fetch(base+'/api/business-drafts/'+draft+'/engine/deliverables/'+artifact)
+  assert.equal(res.status,401)
+})
