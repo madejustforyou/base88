@@ -76,3 +76,11 @@ test('private verified artifact download cannot be accessed anonymously',async()
   const res=await fetch(base+'/api/business-drafts/'+draft+'/engine/deliverables/'+artifact)
   assert.equal(res.status,401)
 })
+
+test('private worker runtime status cannot be read without account identity',async()=>{
+  const id='11111111-1111-4111-8111-111111111111'
+  const response=await fetch(base+'/api/business-drafts/'+id+'/engine/runtime')
+  assert.equal(response.status,401)
+  const body=await response.json()
+  assert.match(body.error,/sign in/i)
+})
