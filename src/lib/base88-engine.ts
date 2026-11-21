@@ -1,5 +1,5 @@
 import type { NextRequest } from 'next/server'
-import { isIP } from 'node:net'
+import { checkedEngineOrigin } from '@/lib/base88-engine-origin'
 import { authenticatedBusinessClient } from '@/lib/base88-auth'
 
 export type EngineContext = {
@@ -17,14 +17,9 @@ export class EngineError extends Error {
 export function engineOrigin():string {
   const raw=process.env.BASE88_ENGINE_URL
   if(!raw)throw new EngineError(503,'Independent Base88 engine is not connected.')
-  try{
-    const u=new URL(raw)
-    if(u.protocol!=='https:'||u.username||u.password||u.pathname!=='/'||
-       u.search||u.hash||u.hostname==='localhost'||u.hostname.endsWith('.local')||
-       u.hostname.endsWith('.internal')||isIP(u.hostname.replace(/^\[|\]$/g,''))!==0)
-      throw new Error('Invalid engine target')
-    return u.origin
-  }catch{throw new EngineError(503,'Independent Base88 engine configuration is invalid.')}
+  const origin=checkedEngineOrigin(raw)
+  if(!origin)throw new EngineError(503,'Independent Base88 engine configuration is invalid.')
+  return origin
 }
 
 /** Resolve a signed customer and an RLS-owned business; no service-role privileges. */
