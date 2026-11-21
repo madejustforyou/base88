@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { generateStarterSite } from '@/lib/surprise-site'
 
 type Idea = {
   name: string
@@ -139,6 +140,7 @@ export default function SurpriseMePage() {
   const [loadingSaved, setLoadingSaved] = useState(false)
   const [showSaved, setShowSaved] = useState(false)
   const [savedError, setSavedError] = useState('')
+  const [siteVisible, setSiteVisible] = useState(false)
   const [savedDrafts, setSavedDrafts] = useState<Array<{id:string;name:string;category:string;brief:Idea;created_at:string}>>([])
 
   async function accountToken() {
@@ -196,6 +198,7 @@ export default function SurpriseMePage() {
     setSelected(source[index])
     setNotice('New zero-upfront business concept prepared. No business was launched and no money was spent.')
     setShowOperations(false)
+    setSiteVisible(false)
   }
 
   function download() {
@@ -208,6 +211,19 @@ export default function SurpriseMePage() {
     a.click()
     URL.revokeObjectURL(href)
     setNotice('Launch brief exported locally. This does not create or publish a business.')
+  }
+
+  function downloadSite() {
+    if (!selected) return
+    const filename = selected.name.toLowerCase().replace(/[^a-z0-9-]/g, '-') + '-starter-site.html'
+    const blob = new Blob([generateStarterSite(selected)], {type:'text/html;charset=utf-8'})
+    const href = URL.createObjectURL(blob)
+    const anchor = document.createElement('a')
+    anchor.href = href
+    anchor.download = filename
+    anchor.click()
+    URL.revokeObjectURL(href)
+    setNotice('HTML starter site downloaded. It is not published; forms and checkout are intentionally inactive.')
   }
 
   const options = ['Any viable category', ...Array.from(new Set(ideas.map(x=>x.category)))]
@@ -279,9 +295,16 @@ export default function SurpriseMePage() {
           <div style={{display:'flex',flexWrap:'wrap',gap:12,marginTop:23}}>
             <button onClick={download} style={button}>Download complete launch brief</button>
             <button onClick={saveDraft} disabled={saving} style={{...button,background:'#235748',borderColor:'#54be9d',opacity:saving?.65:1}}>{saving?'Saving…':'Save to my account'}</button>
+            <button onClick={()=>setSiteVisible(!siteVisible)} style={{...button,background:'#343458'}}>{siteVisible?'Hide starter website':'Preview starter website'}</button>
+            <button onClick={downloadSite} style={{...button,background:'#343458'}}>Download website HTML</button>
             <button onClick={generate} style={{...button,background:'transparent',color:'#e4dfff'}}>Try another business</button>
           </div>
           <div role="status" style={{fontSize:13,color:'#8eefd1',marginTop:15}}>{notice}</div>
+          {siteVisible && <section style={{...panel,marginTop:22}}>
+            <h3 style={{fontSize:20,fontWeight:800,marginBottom:8}}>Generated starter website · safe preview</h3>
+            <p style={{fontSize:13,color:'#aeb4cc',marginBottom:15}}>Self-contained HTML, no external resources, checkout, email or scripts.</p>
+            <iframe title={selected.name+' starter website preview'} sandbox="" referrerPolicy="no-referrer" srcDoc={generateStarterSite(selected)} style={{width:'100%',height:610,borderRadius:12,border:'1px solid #46516b',background:'#09131c'}} />
+          </section>}
         </div> : <div style={{...panel,textAlign:'center',padding:'48px 24px',borderStyle:'dashed'}}>
           <div style={{fontSize:42,marginBottom:14}}>✧</div>
           <p style={{fontSize:20,fontWeight:700,marginBottom:8}}>Your next business starts with one click</p>
