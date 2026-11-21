@@ -6,6 +6,13 @@ import {supabase} from '@/lib/supabase'
 
 type Task={id:string;kind:string;title:string;status:string;attempt_count:number;error:string}
 type Output={id:string;job_id:string;name:string;sha256:string;integrity_verified:boolean;size_bytes:number}
+type Runtime={
+  worker_heartbeat_fresh:boolean
+  observed_worker_count:number
+  most_recent_worker_pulse_at:string|null
+  federated_tasks:Record<string,number>
+  observation_only:true
+}
 const types=[
   {kind:'landing_page',title:'Draft a landing page',desc:'Private HTML draft; no publication'},
   {kind:'starter_product',title:'Create a product template',desc:'Editable product materials'},
@@ -22,6 +29,8 @@ export default function EngineWorkspace(){
   const [busy,setBusy]=useState(false)
   const [error,setError]=useState('')
   const [notice,setNotice]=useState('')
+  const [runtime,setRuntime]=useState<Runtime|null>(null)
+  const [runtimeChecked,setRuntimeChecked]=useState(false)
 
   const token=useCallback(async()=>{
     const {data,error}=await supabase.auth.getSession()
@@ -35,6 +44,8 @@ export default function EngineWorkspace(){
   const load=useCallback(async()=>{
     const jwt=await token()
     if(!jwt){setLoading(false);return}
+    setRuntimeChecked(false)
+    setRuntime(null)
     try{
       const res=await fetch('/api/business-drafts/'+encodeURIComponent(id)+'/engine/tasks',{
         headers:{Authorization:'Bearer '+jwt},cache:'no-store'
@@ -45,8 +56,24 @@ export default function EngineWorkspace(){
       setTasks(Array.isArray(data.tasks)?data.tasks:[])
       setOutputs(Array.isArray(data.deliverables)?data.deliverables:[])
       setError('')
+      if(data.imported===true){
+        try{
+          const runtimeRes=await fetch('/api/business-drafts/'+encodeURIComponent(id)+'/engine/runtime',{
+            headers:{Authorization:'Bearer '+jwt},cache:'no-store'
+          })
+          if(runtimeRes.ok){
+            const runtimeData=await runtimeRes.json()
+            if(typeof runtimeData.worker_heartbeat_fresh==='boolean'&&runtimeData.observation_only===true){
+              setRuntime(runtimeData as Runtime)
+            }
+          }
+        }catch{
+          // An unavailable telemetry endpoint never becomes a green status.
+        }
+      }
+      setRuntimeChecked(true)
     }catch{setError('The private Base88 engine could not be reached.')}
-    finally{setLoading(false)}
+    finally{setLoading(false);setRuntimeChecked(true)}
   },[id,token])
 
   useEffect(()=>{void load()},[load])
@@ -123,6 +150,26 @@ export default function EngineWorkspace(){
       {error && <p role="alert" className="bg-rose-950/40 border border-rose-500/30 rounded-xl p-5 mb-7 text-rose-200">{error} <Link href="/auth/login" className="underline">Account login</Link></p>}
       {notice && <p role="status" className="bg-emerald-900/30 border border-emerald-500/30 rounded-xl p-5 mb-7 text-emerald-200">{notice}</p>}
       {!error&&!loading&&!imported && <p className="p-6 border border-amber-500/20 bg-amber-950/20 rounded-xl mb-7 text-amber-200">This business is not connected to a private engine workspace yet. Importing creates an internal planning workspace, not a launched business.</p>}
+      <section className="mb-9 border border-white/10 bg-white/5 rounded-2xl p-6" aria-label="Verified worker runtime">
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <h2 className="text-xl font-bold">Actual worker status</h2>
+            <p className="text-slate-400 text-sm mt-2">A recent receipt from the private engine database is required before Base88 reports a running worker.</p>
+          </div>
+          <span role="status" className={runtime?.worker_heartbeat_fresh
+            ?'text-emerald-200 border border-emerald-500/40 bg-emerald-950/30 rounded-full px-3 py-2 text-xs font-semibold'
+            :'text-amber-200 border border-amber-500/40 bg-amber-950/30 rounded-full px-3 py-2 text-xs font-semibold'}>
+            {runtime?.worker_heartbeat_fresh?'Worker observed':runtimeChecked?'Worker not verified':'Checking evidence…'}
+          </span>
+        </div>
+        {runtime && <div className="mt-5 text-slate-300 text-sm grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div>Active heartbeat count: <strong>{runtime.observed_worker_count}</strong></div>
+          <div>Queued private tasks: <strong>{runtime.federated_tasks?.queued??0}</strong></div>
+          <div>Completed private tasks: <strong>{runtime.federated_tasks?.completed??0}</strong></div>
+          <p className="text-slate-400 text-xs md:col-span-3">Last recorded heartbeat: {runtime.most_recent_worker_pulse_at||'Not observed'}. An observed heartbeat does not verify model inference, Docker isolation, payments, customer messages, or site deployment.</p>
+        </div>}
+        {!runtime && <p className="text-amber-200/80 text-sm mt-4">No verified runtime evidence is available. Private backend hosting, database migrations and a running worker still require live deployment.</p>}
+      </section>
       <section className="mb-9">
         <h2 className="text-2xl font-bold mb-4">Create private deliverables</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
