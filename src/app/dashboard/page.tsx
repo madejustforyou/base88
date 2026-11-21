@@ -143,6 +143,7 @@ export default function Dashboard() {
             </div>
             <div className="flex flex-wrap gap-4 items-center">
               <Link className="text-emerald-300 text-sm underline" href={'/business-drafts/'+d.id+'/inbox'}>Open test inbox</Link>
+              <Link className="text-violet-300 text-sm underline" href={'/business-drafts/'+d.id+'/engine'}>Private engine tasks</Link>
               <button disabled={importing!==null} onClick={()=>void importIntoEngine(d)}
                 className="bg-violet-700 hover:bg-violet-600 disabled:opacity-50 text-white rounded-lg px-4 py-2 text-sm font-semibold">
                 {importing===d.id?'Connecting…':'Prepare in independent engine'}
