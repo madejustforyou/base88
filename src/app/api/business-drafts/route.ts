@@ -52,7 +52,7 @@ function list(value: unknown): value is string[] {
   return Array.isArray(value) && value.length >= 1 && value.length <= 8
     && value.every(item => string(item, 350))
 }
-export function validateBrief(value: unknown): value is Brief {
+function validateBrief(value: unknown): value is Brief {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false
   const x = value as Record<string, unknown>
   return string(x.name, 120) && string(x.category, 64) && string(x.audience, 300)
