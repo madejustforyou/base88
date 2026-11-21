@@ -337,9 +337,10 @@ export default function SurpriseMePage() {
             {savedError ? <p role="alert" style={{color:'#f2b7ab',fontSize:14}}>{savedError}</p> :
             savedDrafts.length===0 ? <p style={{color:'#aeb4cc',fontSize:14}}>No saved drafts to display.</p> :
             savedDrafts.map(d=>
-              <button key={d.id} onClick={()=>{setSelected(d.brief);setNotice('Saved business draft opened. No live business has been launched.')}} style={{textAlign:'left',background:'#1e2035',border:'1px solid #464866',padding:16,borderRadius:12,color:'#f2efff',cursor:'pointer',display:'flex',justifyContent:'space-between',gap:12}}>
-                <strong>{d.name}</strong><span style={{fontSize:13,color:'#9fadc4'}}>{d.category}</span>
-              </button>
+              <div key={d.id} style={{background:'#1e2035',border:'1px solid #464866',padding:16,borderRadius:12,display:'flex',justifyContent:'space-between',gap:12,alignItems:'center',flexWrap:'wrap'}}>
+                <button onClick={()=>{setSelected(d.brief);setSiteVisible(false);setNotice('Saved business draft opened. No live business has been launched.')}} style={{textAlign:'left',background:'transparent',border:0,color:'#f2efff',cursor:'pointer',fontWeight:800,fontSize:16}}>{d.name} <span style={{color:'#9fadc4',fontWeight:400,fontSize:12}}>· {d.category}</span></button>
+                <Link href={'/business-drafts/'+d.id+'/inbox'} style={{color:'#8ce5c9',fontSize:13,textDecoration:'underline'}}>Open test inbox</Link>
+              </div>
             )}
           </div>}
         </section>
