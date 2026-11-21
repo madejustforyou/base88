@@ -43,3 +43,11 @@ test('public waitlist rejects oversized request before database access',async()=
   const res=await fetch(base+'/api/waitlist',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:'valid@example.com',use_case:'X'.repeat(9000)})})
   assert.equal(res.status,413)
 })
+
+test('private engine draft import refuses anonymous requests',async()=>{
+  const id='11111111-1111-4111-8111-111111111111'
+  const res=await fetch(base+'/api/business-drafts/'+id+'/engine',{method:'POST'})
+  assert.equal(res.status,401)
+  const json=await res.json()
+  assert.match(json.error,/sign in/i)
+})
