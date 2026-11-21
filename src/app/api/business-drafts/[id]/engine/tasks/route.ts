@@ -42,7 +42,9 @@ export async function POST(request:NextRequest,context:Context){
     const raw=await request.text()
     if(Buffer.byteLength(raw,'utf8')>2000)
       return response({error:'Task request too large.'},413)
-    const body:unknown=JSON.parse(raw)
+    let body:unknown
+    try { body=JSON.parse(raw) }
+    catch { return response({error:'Invalid JSON task request.'},400) }
     if(!body||typeof body!=='object'||Array.isArray(body))
       return response({error:'Invalid task request.'},400)
     const b=body as Record<string,unknown>
