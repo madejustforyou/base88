@@ -66,3 +66,25 @@ jobs:
           done
           if [ "$ready" -ne 1 ]; then cat /tmp/base88-preview.log; exit 1; fi
           node --test tests/preview-api.test.mjs
+
+      - name: Verify preview cannot reach production-scoped data
+        env:
+          VERCEL_ENV: preview
+          NEXT_PUBLIC_SUPABASE_URL: https://example.invalid
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: build-only-not-an-actual-credential
+          NEXT_TELEMETRY_DISABLED: '1'
+        run: |
+          set -euo pipefail
+          npm run start -- --port 3034 > /tmp/base88-preview-locked.log 2>&1 &
+          NEXT_PID=$!
+          trap 'kill "$NEXT_PID" 2>/dev/null || true' EXIT
+          ready=0
+          for i in $(seq 1 40); do
+            if curl -fsS -o /dev/null http://127.0.0.1:3034/surprise-me; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$ready" -ne 1 ]; then cat /tmp/base88-preview-locked.log; exit 1; fi
+          TEST_BASE_URL=http://127.0.0.1:3034 node --test tests/preview-isolation.test.mjs
