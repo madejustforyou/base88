@@ -31,6 +31,8 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Assert staging can never unlock against production Supabase
         run: node --experimental-strip-types --test tests/staging-isolation.test.mjs
+      - name: Verify signed engine origin cannot target local hosts
+        run: node --experimental-strip-types --test tests/engine-origin.test.mjs
       - name: Test offline generated business sites
         run: node --experimental-strip-types --test tests/surprise-site.test.mjs
       - name: Verify launch ZIP export using Python's standard ZIP reader
