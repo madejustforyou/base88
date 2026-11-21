@@ -37,6 +37,7 @@ export default function Home() {
       <nav style={{position:'sticky',top:0,zIndex:100,background:'rgba(6,6,16,0.85)',backdropFilter:'blur(16px)',borderBottom:'1px solid rgba(255,255,255,0.06)',padding:'0 48px',height:64,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
         <div style={{fontWeight:900,fontSize:'1.4rem',letterSpacing:'-0.5px',background:'linear-gradient(135deg,#7c6fff,#1ef5b0)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>Base88</div>
         <div className="nav-links" style={{display:'flex',alignItems:'center',gap:32}}>
+          <Link href="/surprise-me" style={{color:'#8ddcc6',fontSize:14,fontWeight:700,textDecoration:'none'}}>Surprise Me ✦</Link>
           <a href="#features" style={{color:'#6b6b8a',fontSize:14,fontWeight:500,textDecoration:'none'}}>Features</a>
           <a href="#pricing" style={{color:'#6b6b8a',fontSize:14,fontWeight:500,textDecoration:'none'}}>Pricing</a>
           <a href="#testimonials" style={{color:'#6b6b8a',fontSize:14,fontWeight:500,textDecoration:'none'}}>Reviews</a>
@@ -66,6 +67,7 @@ export default function Home() {
             <Link href="/auth/signup" className="btn-primary" style={{padding:'16px 36px',fontSize:'1rem',boxShadow:'0 0 48px rgba(124,111,255,0.45)'}}>
               Start building free →
             </Link>
+            <Link href="/surprise-me" className="btn-ghost" style={{padding:'16px 32px',fontSize:'1rem'}}>✦ Surprise Me — $0 business</Link>
             <a href="#features" className="btn-ghost" style={{padding:'16px 32px',fontSize:'1rem'}}>
               See how it works
             </a>
