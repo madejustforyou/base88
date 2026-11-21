@@ -51,3 +51,16 @@ Do not put private backend secrets, model endpoints, container sockets, credenti
 - Each inbox record is tied to an owned business; the RLS insert/update policies require that business to belong to the same user.
 - Owner test messages never trigger an external communication.
 - All external publication, commerce and messaging actions require separately authorized workflows and provider verification.
+
+
+## Independent engine connection (v1.3 bridge)
+- The new Next.js route `POST /api/business-drafts/:id/engine` verifies the Supabase user's JWT **and** re-reads the owner-owned business draft under RLS before forwarding it.
+- Backend `POST /api/federation/v1/workspaces` verifies the JWT signature against the fixed Supabase project's asymmetric signing keys, checks issuer, authenticated audience/role and expiry, then creates an issuer+subject-bound internal identity.
+- No email-based identity linking. Re-importing the same saved draft is idempotent; a second account can never receive another account's internal workspace.
+- Deploy the independent **Base88 v1.3** backend to a separately managed HTTPS origin with a migrated PostgreSQL database. Set `BASE88_SUPABASE_JWT_ISSUER` to that precise Supabase project's issuer URL, e.g. `https://<project>.supabase.co/auth/v1`, only after verifying its asymmetric signing-key support.
+- Set the Vercel **preview-only** server environment `BASE88_ENGINE_URL=https://<isolated-engine-host>/` after the isolated backend passes its authentication and health checks. Do not commit endpoints, private signing keys or backend credentials to the repository.
+- The frontend route refuses to run when the engine origin is not configured and never sends a user token to an owner-specified URL. An HTTPS redirect is not followed.
+- A successful import creates a **private planning workspace only**. It does not schedule jobs, publish websites, send customer messages, or trigger payments.
+- Test with two different staging users, invalid/wrong-project/expired JWTs, and one draft imported twice. Verify provider/API request failures do not leak the token or infrastructure details.
+- This is a **code-complete bridge**, not evidence of an active backend deployment. The missing Supabase staging connection and separate worker host must be configured before live verification.
+
