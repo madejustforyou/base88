@@ -16,6 +16,14 @@ const tracks = [
     action:'Try Surprise Me',
   },
   {
+    name:'App Studio — functional client-side prototypes',
+    label:'Preview available',
+    level:'ready',
+    description:'Describe a task, customer, or booking tracker and generate a runnable browser-local app with editable HTML and ZIP export. This is deterministic scaffolding, not autonomous AI development or a hosted backend.',
+    href:'/studio',
+    action:'Try App Studio',
+  },
+  {
     name:'Account and private drafts',
     label:'Requires connected storage',
     level:'partial',

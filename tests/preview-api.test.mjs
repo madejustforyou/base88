@@ -11,6 +11,12 @@ test('Surprise Me page is available without login',async()=>{
   assert.match(html,/Surprise me/i)
 })
 
+test('App Studio prototype builder is available without login',async()=>{
+  const res=await fetch(base+'/studio')
+  assert.equal(res.status,200)
+  assert.match(await res.text(),/App Studio/)
+})
+
 test('business drafts reject anonymous reads and writes',async()=>{
   const get=await fetch(base+'/api/business-drafts')
   assert.equal(get.status,401)
