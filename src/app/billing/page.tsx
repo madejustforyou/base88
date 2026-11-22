@@ -21,7 +21,9 @@ export default function BillingPage() {
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) { router.push('/auth/login'); return }
       setUser(data.user)
-      setCurrentPlan(data.user.user_metadata?.plan || 'free')
+      // User-editable metadata is not an entitlement source.
+      // Verified subscriptions will come from server-side billing once enabled.
+      setCurrentPlan('free')
       setLoading(false)
     })
   }, [router])
@@ -54,22 +56,22 @@ export default function BillingPage() {
       <div style={s.main}>
         <div style={{ marginBottom: 32 }}>
           <h1 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: 4 }}>💳 Billing</h1>
-          <p style={{ color: '#6b6b8a', fontSize: 14 }}>Manage your subscription and usage</p>
+          <p style={{ color: '#6b6b8a', fontSize: 14 }}>Preview proposed plans. Paid subscriptions and the credit ledger are not live yet.</p>
         </div>
 
         {/* Current plan */}
         <div style={{ background: 'rgba(124,111,255,0.08)', border: '1px solid rgba(124,111,255,0.2)', borderRadius: 16, padding: 24, marginBottom: 40 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <div style={{ fontWeight: 700, marginBottom: 4 }}>Current Plan</div>
+              <div style={{ fontWeight: 700, marginBottom: 4 }}>Current preview access</div>
               <div style={{ fontSize: '1.5rem', fontWeight: 800 }}>{PLANS.find(p => p.key === currentPlan)?.name || 'Free'}</div>
               <div style={{ color: '#6b6b8a', fontSize: 13, marginTop: 4 }}>{PLANS.find(p => p.key === currentPlan)?.credits.toLocaleString()} credits · {PLANS.find(p => p.key === currentPlan)?.apps === 999 ? 'Unlimited' : PLANS.find(p => p.key === currentPlan)?.apps} agents</div>
             </div>
-            <div style={{ padding: '6px 16px', background: 'rgba(30,245,176,0.15)', border: '1px solid rgba(30,245,176,0.3)', borderRadius: 100, fontSize: 12, fontWeight: 700, color: '#1ef5b0' }}>Active</div>
+            <div style={{ padding: '6px 16px', background: 'rgba(30,245,176,0.15)', border: '1px solid rgba(30,245,176,0.3)', borderRadius: 100, fontSize: 12, fontWeight: 700, color: '#1ef5b0' }}>Preview</div>
           </div>
         </div>
 
-        <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: 24 }}>Upgrade your plan</h2>
+        <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: 24 }}>Planned subscription tiers — not yet accepting payment</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 20 }}>
           {PLANS.map(plan => (
             <div key={plan.key} style={{ background: plan.highlight ? 'linear-gradient(160deg,rgba(124,111,255,0.12),rgba(255,255,255,0.04))' : 'rgba(255,255,255,0.04)', border: plan.highlight ? '1px solid #7c6fff' : '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: 24, position: 'relative' }}>
@@ -81,8 +83,8 @@ export default function BillingPage() {
               {plan.key === currentPlan ? (
                 <div style={{ textAlign: 'center', marginTop: 20, color: '#6b6b8a', fontSize: 13 }}>✓ Current plan</div>
               ) : (
-                <button onClick={() => alert('Payment integration coming soon! Contact us to upgrade.')} style={{ width: '100%', marginTop: 20, padding: '11px', background: plan.highlight ? 'linear-gradient(135deg,#7c6fff,#5a4fcf)' : 'transparent', color: plan.highlight ? '#fff' : '#e8e8f0', border: plan.highlight ? 'none' : '1px solid rgba(255,255,255,0.15)', borderRadius: 12, fontWeight: 700, fontSize: 14, cursor: 'pointer' }}>
-                  {plan.price === 0 ? 'Downgrade' : `Upgrade → S$${plan.price}/mo`}
+                <button onClick={() => router.push('/launch')} style={{ width: '100%', marginTop: 20, padding: '11px', background: plan.highlight ? 'linear-gradient(135deg,#7c6fff,#5a4fcf)' : 'transparent', color: plan.highlight ? '#fff' : '#e8e8f0', border: plan.highlight ? 'none' : '1px solid rgba(255,255,255,0.15)', borderRadius: 12, fontWeight: 700, fontSize: 14, cursor: 'pointer' }}>
+                  {plan.price === 0 ? 'Free preview' : `Request ${plan.name} access`}
                 </button>
               )}
             </div>
