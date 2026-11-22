@@ -6,10 +6,10 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: {
-    default: 'Base88 — AI App Builder Singapore | Build Apps Without Code',
+    default: 'Base88 — Build, Launch, and Run AI Businesses',
     template: '%s | Base88',
   },
-  description: "Base88 is Singapore's #1 AI-powered no-code app builder. Build full-stack web apps in minutes with AI. Includes database, automations, HitPay payments, and custom domains. Free to start.",
+  description: "Base88 is building an independent AI business-operator platform. Try a downloadable starter business site and follow the verified November 28 beta launch.",
   keywords: [
     'AI app builder Singapore',
     'no-code platform Singapore',
@@ -35,14 +35,14 @@ export const metadata: Metadata = {
     locale: 'en_SG',
     url: 'https://base88.app',
     siteName: 'Base88',
-    title: 'Base88 — AI App Builder Singapore | Build Apps Without Code',
-    description: "Build full-stack web apps in minutes using AI. No coding required. Singapore's no-code platform with database, automations & HitPay payments built in.",
+    title: 'Base88 — Build, Launch, and Run AI Businesses',
+    description: "Explore a real downloadable starter project with Surprise Me and track the verified November 28 Base88 beta.",
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Base88 — AI App Builder Singapore' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Base88 — AI App Builder Singapore',
-    description: 'Build full-stack apps in minutes with AI. No coding. Free to start.',
+    description: 'Explore independent Base88 business-building tools, with a verifiable beta launch on November 28.',
     images: ['/og-image.png'],
     creator: '@base88app',
   },
@@ -61,10 +61,9 @@ const jsonLd = {
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "Web",
   "url": "https://base88.app",
-  "description": "Singapore's AI-powered no-code app builder. Build full-stack web apps in minutes with AI. No coding required.",
+  "description": "An independent AI business operator in development, with starter projects you can download and test.",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "SGD", "description": "Free plan available" },
-  "publisher": { "@type": "Organization", "name": "Base88", "url": "https://base88.app", "address": { "@type": "PostalAddress", "addressCountry": "SG", "addressLocality": "Singapore" } },
-  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127" }
+  "publisher": { "@type": "Organization", "name": "Base88", "url": "https://base88.app", "address": { "@type": "PostalAddress", "addressCountry": "SG", "addressLocality": "Singapore" } }
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
