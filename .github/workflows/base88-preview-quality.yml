@@ -46,6 +46,8 @@ jobs:
         run: node --test tests/launch-readiness.test.mjs
       - name: Verify paid model is owner-authenticated and transactionally quota-gated
         run: node --test tests/agent-chat-security.test.mjs
+      - name: Validate authenticated Operator goal UI and private engine routes
+        run: node --test tests/standing-goal-workspace.test.mjs
       - name: Build complete Next.js preview
         # Public test values only. No real Supabase credentials or customer data in CI.
         # This checks compilation, NOT live Supabase connectivity.
