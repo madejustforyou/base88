@@ -95,7 +95,7 @@ export default function AgentsPage() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
           <div>
             <h1 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: 4 }}>🤖 AI Agents</h1>
-            <p style={{ color: '#6b6b8a', fontSize: 14 }}>Your intelligent agents — available 24/7</p>
+            <p style={{ color: '#6b6b8a', fontSize: 14 }}>Configure your Operator profiles. Autonomous execution requires backend activation.</p>
           </div>
           <button onClick={() => { setShowCreate(true); setStep(1); setAgentName(''); setAgentDesc('') }} style={{ background: 'linear-gradient(135deg,#7c6fff,#5a4fcf)', color: '#fff', border: 'none', borderRadius: 12, padding: '10px 20px', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}>+ New Agent</button>
         </div>
@@ -104,7 +104,7 @@ export default function AgentsPage() {
           <div style={{ textAlign: 'center', padding: '80px 24px', border: '2px dashed rgba(255,255,255,0.1)', borderRadius: 20 }}>
             <div style={{ fontSize: '3rem', marginBottom: 16 }}>🤖</div>
             <div style={{ fontWeight: 700, fontSize: '1.1rem', marginBottom: 8 }}>No agents yet</div>
-            <div style={{ color: '#6b6b8a', marginBottom: 24 }}>Create your first AI agent — it'll be live in seconds</div>
+            <div style={{ color: '#6b6b8a', marginBottom: 24 }}>Create an Operator profile. Real unattended execution is not active in this preview.</div>
             <button onClick={() => { setShowCreate(true); setStep(1) }} style={{ background: 'linear-gradient(135deg,#7c6fff,#5a4fcf)', color: '#fff', border: 'none', borderRadius: 12, padding: '12px 24px', fontWeight: 700, cursor: 'pointer' }}>+ Create your first agent</button>
           </div>
         ) : (
