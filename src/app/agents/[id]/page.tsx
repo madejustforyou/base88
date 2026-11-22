@@ -41,23 +41,42 @@ export default function AgentChatPage() {
     setSending(true)
 
     try {
+      const session = await supabase.auth.getSession()
+      const accessToken = session.data.session?.access_token
+      if (!accessToken) throw new Error('Sign in again to message your Operator.')
       const res = await fetch('/api/agents/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ agentId, message: userMsg.content, systemPrompt: agent.system_prompt, userId: user.id }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + accessToken,
+        },
+        body: JSON.stringify({
+          agentId,
+          message: userMsg.content,
+          requestId: crypto.randomUUID(),
+        }),
       })
       const data = await res.json()
-      const botMsg: Message = { role: 'assistant', content: data.reply || '❌ No response', ts: new Date().toISOString() }
+      if (!res.ok) {
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: '❌ ' + String(data.error || 'Operator chat is unavailable.'),
+          ts: new Date().toISOString(),
+        }])
+        return
+      }
+      const botMsg: Message = { role: 'assistant', content: data.reply, ts: new Date().toISOString() }
       setMessages(prev => [...prev, botMsg])
-      // Save to DB
+      // Save only verified successful provider responses.
       await supabase.from('agent_logs').insert([
         { agent_id: agentId, user_id: user.id, role: 'user', content: userMsg.content },
         { agent_id: agentId, user_id: user.id, role: 'assistant', content: botMsg.content },
       ])
     } catch (e) {
-      setMessages(prev => [...prev, { role: 'assistant', content: '❌ Network error. Please try again.', ts: new Date().toISOString() }])
+      setMessages(prev => [...prev, { role: 'assistant', content: '❌ Could not reach the authenticated Operator service. Please retry.', ts: new Date().toISOString() }])
+    } finally {
+      setSending(false)
     }
-    setSending(false)
   }
 
   if (!agent) return <div style={{ minHeight: '100vh', background: '#060610', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b6b8a' }}>Loading...</div>
