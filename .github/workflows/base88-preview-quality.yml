@@ -42,6 +42,8 @@ jobs:
           node --check tests/rls-staging-only.mjs
       - name: Verify actual download bytes against SHA256 manifest
         run: node --experimental-strip-types --test tests/deliverable-integrity.test.mjs
+      - name: Require truthful November 28 launch messaging and no unverified paid plan
+        run: node --test tests/launch-readiness.test.mjs
       - name: Build complete Next.js preview
         # Public test values only. No real Supabase credentials or customer data in CI.
         # This checks compilation, NOT live Supabase connectivity.
