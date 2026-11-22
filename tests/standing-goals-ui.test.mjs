@@ -46,3 +46,13 @@ test('business dashboard links to Operator goals without declaring paid work com
  assert.match(dash,/Dedicate|Autonomous company operation/)
  assert.doesNotMatch(dash,/we guarantee your agent will make money/i)
 })
+
+
+test('dashboard reflects real worker pulses and refreshes private job receipts',()=>{
+ const page=get('src/app/business-drafts/[id]/operator/page.tsx')
+ assert.match(page,/engine\/runtime/)
+ assert.match(page,/worker_heartbeat_fresh===true/)
+ assert.match(page,/No live worker observed/)
+ assert.match(page,/setInterval\(\(\)=>\{void inspect\(selected\)\},12000\)/)
+ assert.match(page,/real tenant-bound job receipts/)
+})

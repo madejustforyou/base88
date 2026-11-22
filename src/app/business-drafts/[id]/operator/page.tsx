@@ -23,6 +23,8 @@ export default function OperatorPage(){
  const [notice,setNotice]=useState('')
  const [loading,setLoading]=useState(true)
  const [busy,setBusy]=useState(false)
+ const [workerStatus,setWorkerStatus]=useState<'checking'|'online'|'offline'>('checking')
+ const [workerCount,setWorkerCount]=useState(0)
  const base='/api/business-drafts/'+encodeURIComponent(id)+'/engine/goals'
 
  const authHeaders=async()=>{
@@ -38,7 +40,19 @@ export default function OperatorPage(){
    const data=await res.json()
    if(!res.ok){setNotice(data.error||'Independent engine is not connected.');setGoals([])}
    else {setGoals(data.goals||[]);setNotice(data.error||'')}
-  }catch{setNotice('Could not connect to the private Operator workspace.')}
+   const health=await fetch('/api/business-drafts/'+encodeURIComponent(id)+'/engine/runtime',{
+    headers,cache:'no-store',
+   })
+   const runtime=await health.json()
+   const measured=health.ok&&runtime.worker_heartbeat_fresh===true&&
+     Number.isInteger(runtime.observed_worker_count)&&runtime.observed_worker_count>0
+   setWorkerStatus(measured?'online':'offline')
+   setWorkerCount(measured?runtime.observed_worker_count:0)
+  }catch{
+   setWorkerStatus('offline')
+   setWorkerCount(0)
+   setNotice('Could not connect to the private Operator workspace.')
+  }
   finally{setLoading(false)}
  },[base])
 
@@ -64,6 +78,7 @@ export default function OperatorPage(){
    const data=await res.json()
    if(!res.ok)throw new Error(data.error||'Could not create this goal.')
    setNotice('Goal saved. Activate it to begin limited private work when the worker is connected.')
+   if(typeof data.goal?.id==='string')setSelected(data.goal.id)
    await refresh()
   }catch(e){setNotice(e instanceof Error?e.message:'Could not save this goal.')}
   finally{setBusy(false)}
@@ -101,6 +116,14 @@ export default function OperatorPage(){
   }catch(e){setNotice(e instanceof Error?e.message:'Cannot load Operator jobs.')}
  }
 
+ // A recorded completion is shown only after querying real tenant-bound job receipts.
+ // Poll selected work while the owner keeps this page open.
+ useEffect(()=>{
+  if(!selected)return
+  const timer=setInterval(()=>{void inspect(selected)},12000)
+  return()=>clearInterval(timer)
+ },[selected,base])
+
  return <main className="min-h-screen bg-[#080c1c] text-slate-100">
   <header className="border-b border-white/10 px-6 py-5">
    <div className="max-w-5xl mx-auto flex justify-between items-center gap-4">
@@ -109,6 +132,13 @@ export default function OperatorPage(){
    </div>
   </header>
   <div className="max-w-5xl mx-auto px-6 py-12">
+   <div role="status" className="mb-6 border border-white/10 rounded-xl p-4 bg-white/[0.035] flex flex-wrap justify-between gap-3 text-sm">
+    <span className="font-semibold text-slate-200">Independent worker heartbeat</span>
+    <span className={workerStatus==='online'?'text-emerald-300':'text-amber-200'}>
+     {workerStatus==='online'?'Observed '+workerCount+' recent worker pulse(s)':
+      workerStatus==='checking'?'Checking actual runtime…':'No live worker observed'}
+    </span>
+   </div>
    <div className="rounded-xl border border-violet-400/25 bg-violet-400/10 px-4 py-3 text-xs text-violet-200 inline-block mb-6">
     Owner-managed business Operator · November 28 beta
    </div>
