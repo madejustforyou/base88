@@ -37,6 +37,7 @@ export default function Home() {
       <nav style={{position:'sticky',top:0,zIndex:100,background:'rgba(6,6,16,0.85)',backdropFilter:'blur(16px)',borderBottom:'1px solid rgba(255,255,255,0.06)',padding:'0 48px',height:64,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
         <div style={{fontWeight:900,fontSize:'1.4rem',letterSpacing:'-0.5px',background:'linear-gradient(135deg,#7c6fff,#1ef5b0)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>Base88</div>
         <div className="nav-links" style={{display:'flex',alignItems:'center',gap:32}}>
+          <Link href="/studio" style={{color:'#d1c9ff',fontSize:14,fontWeight:700,textDecoration:'none'}}>App Studio</Link>
           <Link href="/surprise-me" style={{color:'#8ddcc6',fontSize:14,fontWeight:700,textDecoration:'none'}}>Surprise Me ✦</Link>
           <Link href="/launch" style={{color:'#a78bfa',fontSize:14,fontWeight:700,textDecoration:'none'}}>Launch status · Nov 28</Link>
           <a href="#features" style={{color:'#6b6b8a',fontSize:14,fontWeight:500,textDecoration:'none'}}>Features</a>
