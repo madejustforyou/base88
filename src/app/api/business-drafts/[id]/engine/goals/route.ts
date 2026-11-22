@@ -24,7 +24,7 @@ export async function GET(request:NextRequest,ctx:Context){
     const data:unknown=await res.json()
     if(!data||typeof data!=='object'||!Array.isArray((data as Record<string,unknown>).goals))
       throw new EngineError(502,'Invalid private Operator response.')
-    return response({connected:true,imported:true,...data as object})
+    return response({connected:true,imported:true,...(data as object)})
   }catch(e){
     const err=safeEngineError(e)
     return response({error:err.error,connected:false,goals:[]},err.status)
