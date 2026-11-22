@@ -7,12 +7,13 @@ import { Suspense } from 'react'
 
 function SignupForm() {
   const searchParams = useSearchParams()
-  const defaultPlan = searchParams.get('plan') || 'free'
+  // Query strings are marketing preferences, NEVER verified paid entitlements.
+  const requestedPlan = searchParams.get('plan') || 'free'
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
-  const [plan] = useState(defaultPlan)
+  const [plan] = useState('free')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
@@ -24,7 +25,7 @@ function SignupForm() {
     const { error } = await supabase.auth.signUp({
       email, password,
       options: { 
-        data: { full_name: name, plan },
+        data: { full_name: name, plan, requested_plan: requestedPlan },
         emailRedirectTo: 'https://base88.app/dashboard'
       }
     })
