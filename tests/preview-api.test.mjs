@@ -97,3 +97,17 @@ test('AI agent chat refuses anonymous callers before touching paid model API',as
   const body=await res.json()
   assert.match(body.error,/Sign in/i)
 })
+
+
+test('standing Operator routes refuse anonymous customers before private engine forwarding',async()=>{
+  const path=base+'/api/business-drafts/'+businessId+'/engine/goals'
+  const get=await fetch(path)
+  assert.equal(get.status,401)
+  const post=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({objective:'Run my company automatically',
+      idempotency_key:'test-request-000001'})})
+  assert.equal(post.status,401)
+  const action=await fetch(path+'/'+'a'.repeat(32),{method:'POST',
+    headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'activate'})})
+  assert.equal(action.status,401)
+})

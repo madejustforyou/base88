@@ -46,6 +46,8 @@ jobs:
         run: node --test tests/launch-readiness.test.mjs
       - name: Verify paid model is owner-authenticated and transactionally quota-gated
         run: node --test tests/agent-chat-security.test.mjs
+      - name: Verify tenant-bound standing Operator UI and API contract
+        run: node --test tests/standing-goals-ui.test.mjs
       - name: Build complete Next.js preview
         # Public test values only. No real Supabase credentials or customer data in CI.
         # This checks compilation, NOT live Supabase connectivity.
