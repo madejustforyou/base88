@@ -97,3 +97,23 @@ test('AI agent chat refuses anonymous callers before touching paid model API',as
   const body=await res.json()
   assert.match(body.error,/Sign in/i)
 })
+
+
+test('persistent operator goals refuse anonymous workspace access',async()=>{
+  const draft='11111111-1111-4111-8111-111111111111'
+  const goal='a'.repeat(32)
+  const path=base+'/api/business-drafts/'+draft+'/engine/standing-goals'
+  const list=await fetch(path)
+  assert.equal(list.status,401)
+  const create=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({agent_label:'Ava',
+      objective:'Keep working on my business',
+      idempotency_key:'request_001_abc'})})
+  assert.equal(create.status,401)
+  const change=await fetch(path+'/'+goal+'/action',{method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'activate'})})
+  assert.equal(change.status,401)
+  const jobs=await fetch(path+'/'+goal+'/jobs')
+  assert.equal(jobs.status,401)
+})
