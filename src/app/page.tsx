@@ -113,7 +113,7 @@ export default function Home() {
             <div>
               <div style={{width:52,height:52,borderRadius:16,background:'rgba(30,245,176,0.12)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}>⚡</div>
               <div style={{fontWeight:800,fontSize:'1.1rem',marginBottom:8}}>Downloadable starter projects</div>
-              <div style={{fontSize:14,color:'#6b6b8a',lineHeight:1.6}}>From idea to live agent in under a minute. No servers, no DevOps, no config hell.</div>
+              <div style={{fontSize:14,color:'#6b6b8a',lineHeight:1.6}}>Download a browser-local starter project. Hosted agents, cloud execution and deployment are not yet available.</div>
             </div>
             <div style={{marginTop:24}}>
               <div style={{fontSize:'3.5rem',fontWeight:900,letterSpacing:'-2px',background:'linear-gradient(135deg,#7c6fff,#1ef5b0)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>ZIP</div>
