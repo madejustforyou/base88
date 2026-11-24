@@ -1,18 +1,23 @@
 'use client'
 import Link from 'next/link'
+import { Bot, User, Zap, Database, Plug, BarChart3, Globe2, Repeat, Sparkles } from 'lucide-react'
 
 export default function Home() {
   return (
     <main className="min-h-screen" style={{background:'#060610',color:'#e8e8f0',fontFamily:"'Inter',system-ui,sans-serif"}}>
       <style>{`
-        :root{--accent:#7c6fff;--accent2:#1ef5b0;--muted:#6b6b8a;--border:rgba(255,255,255,0.07);--surface:rgba(255,255,255,0.04)}
+        :root{--accent:#7c6fff;--accent2:#1ef5b0;--muted:#9999b2;--border:rgba(255,255,255,0.07);--surface:rgba(255,255,255,0.04)}
         *{box-sizing:border-box;margin:0;padding:0}
         .btn-primary{background:linear-gradient(135deg,#7c6fff,#5a4fcf);color:#fff;border:none;border-radius:14px;font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center}
         .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(124,111,255,0.4)}
         .btn-ghost{background:transparent;color:#e8e8f0;border:1px solid rgba(255,255,255,0.12);border-radius:14px;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center}
         .btn-ghost:hover{border-color:#7c6fff;color:#7c6fff}
         .grad-text{background:linear-gradient(135deg,#a78bfa,#1ef5b0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-        .grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(124,111,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(124,111,255,0.05) 1px,transparent 1px);background-size:64px 64px;pointer-events:none}
+        .grid-bg{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(1px 1px at 18px 29px,rgba(255,255,255,.72) 98%,transparent),radial-gradient(1px 1px at 69px 103px,rgba(167,139,250,.65) 98%,transparent),radial-gradient(1.5px 1.5px at 134px 71px,rgba(255,255,255,.8) 98%,transparent),radial-gradient(1px 1px at 91px 153px,rgba(30,245,176,.35) 98%,transparent);background-size:211px 197px,277px 243px,389px 317px,173px 229px;mask-image:linear-gradient(#000 0%,#000 60%,transparent 100%)}
+        .shooting-star{position:absolute;left:78%;top:8%;width:140px;height:1px;transform:rotate(-38deg);background:linear-gradient(90deg,transparent,#dcd5ff);opacity:0;animation:meteor 13s linear infinite;pointer-events:none}
+        @keyframes meteor{0%,72%{opacity:0;transform:translate(100px,-80px) rotate(-38deg)}75%{opacity:.85}82%,100%{opacity:0;transform:translate(-300px,240px) rotate(-38deg)}}
+        a:focus-visible{outline:2px solid #b9aaff;outline-offset:4px}
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.shooting-star{display:none}}
         .glow{position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:900px;height:700px;background:radial-gradient(ellipse,rgba(124,111,255,0.2) 0%,transparent 65%);pointer-events:none}
         .bento-card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:32px;transition:all .3s;position:relative;overflow:hidden}
         .bento-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(124,111,255,0.4),transparent);opacity:0;transition:opacity .3s}
@@ -22,7 +27,7 @@ export default function Home() {
         .p-card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:32px;transition:all .3s;position:relative}
         .p-card:hover{transform:translateY(-4px);border-color:rgba(124,111,255,0.3)}
         .p-card.pop{border-color:#7c6fff;background:linear-gradient(160deg,rgba(124,111,255,0.1),rgba(255,255,255,0.04))}
-        .p-card.pop::before{content:'Most Popular';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#7c6fff,#5a4fcf);color:#fff;font-size:11px;font-weight:800;padding:5px 16px;border-radius:100px;white-space:nowrap;letter-spacing:.5px;text-transform:uppercase}
+        .p-card.pop::before{content:'Pro plan';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#7c6fff,#5a4fcf);color:#fff;font-size:11px;font-weight:800;padding:5px 16px;border-radius:100px;white-space:nowrap;letter-spacing:.5px;text-transform:uppercase}
         .p-feat{display:flex;align-items:center;gap:10px;font-size:13px;padding:7px 0;border-bottom:1px solid var(--border);color:#a0a0b8}
         .p-feat:last-child{border:none}
         .p-feat span:first-child{color:#1ef5b0;font-weight:700;flex-shrink:0}
@@ -30,57 +35,50 @@ export default function Home() {
         .testi{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px}
         .pulse{animation:pulse 2s infinite}
         @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-        @media(max-width:768px){.hero-h1{font-size:2.4rem!important;letter-spacing:-1px!important}.nav-links{display:none}}
+        @media(max-width:768px){.hero-h1{font-size:2.6rem!important;letter-spacing:-1px!important}.top-nav{padding:0 16px!important;gap:12px}.nav-links{display:flex!important;gap:12px!important}.nav-links a:not(.mobile-keep){display:none!important}.nav-links .btn-primary{padding:8px 12px!important;white-space:nowrap}.hero-section{min-height:76vh!important;padding:96px 20px 64px!important}.feature-grid{grid-template-columns:1fr!important}.feature-grid>.bento-card{grid-column:1/-1!important;padding:24px}.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:24px!important}.page-footer{padding:40px 20px!important}.closing-title{font-size:2.5rem!important}.glow{width:100%;max-width:900px}}
       `}</style>
 
       {/* NAV */}
-      <nav style={{position:'sticky',top:0,zIndex:100,background:'rgba(6,6,16,0.85)',backdropFilter:'blur(16px)',borderBottom:'1px solid rgba(255,255,255,0.06)',padding:'0 48px',height:64,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+      <nav className="top-nav" aria-label="Main navigation" style={{position:'sticky',top:0,zIndex:100,background:'rgba(6,6,16,0.85)',backdropFilter:'blur(16px)',borderBottom:'1px solid rgba(255,255,255,0.06)',padding:'0 48px',height:64,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
         <div style={{fontWeight:900,fontSize:'1.4rem',letterSpacing:'-0.5px',background:'linear-gradient(135deg,#7c6fff,#1ef5b0)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>Base88</div>
         <div className="nav-links" style={{display:'flex',alignItems:'center',gap:32}}>
-          <Link href="/surprise-me" style={{color:'#8ddcc6',fontSize:14,fontWeight:700,textDecoration:'none'}}>Surprise Me ✦</Link>
+          <Link href="/surprise-me" style={{color:'#8ddcc6',fontSize:14,fontWeight:700,textDecoration:'none'}}>Surprise Me</Link>
           <Link href="/launch" style={{color:'#a78bfa',fontSize:14,fontWeight:700,textDecoration:'none'}}>Launch status · Nov 28</Link>
-          <a href="#features" style={{color:'#6b6b8a',fontSize:14,fontWeight:500,textDecoration:'none'}}>Features</a>
-          <a href="#pricing" style={{color:'#6b6b8a',fontSize:14,fontWeight:500,textDecoration:'none'}}>Pricing</a>
-          <a href="#principles" style={{color:'#6b6b8a',fontSize:14,fontWeight:500,textDecoration:'none'}}>Principles</a>
-          <Link href="/auth/login" style={{color:'#6b6b8a',fontSize:14,fontWeight:500,textDecoration:'none'}}>Login</Link>
-          <Link href="/auth/signup" className="btn-primary" style={{padding:'9px 20px',fontSize:14}}>Get started free →</Link>
+          <a href="#features" style={{color:'#9999b2',fontSize:14,fontWeight:500,textDecoration:'none'}}>Features</a>
+          <a href="#pricing" style={{color:'#9999b2',fontSize:14,fontWeight:500,textDecoration:'none'}}>Pricing</a>
+          <a href="#principles" style={{color:'#9999b2',fontSize:14,fontWeight:500,textDecoration:'none'}}>Principles</a>
+          <Link className="mobile-keep" href="/auth/login" style={{color:'#9999b2',fontSize:14,fontWeight:500,textDecoration:'none'}}>Login</Link>
+          <Link href="/auth/signup" className="btn-primary mobile-keep" style={{padding:'9px 20px',fontSize:14}}>Get started free →</Link>
         </div>
       </nav>
 
       {/* HERO */}
-      <section style={{position:'relative',textAlign:'center',padding:'140px 24px 100px',overflow:'hidden',minHeight:'90vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
-        <div className="grid-bg" />
+      <section className="hero-section" style={{position:'relative',textAlign:'center',padding:'140px 24px 100px',overflow:'hidden',minHeight:'90vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
+        <div className="grid-bg" aria-hidden="true" />
+        <div className="shooting-star" aria-hidden="true" />
         <div className="glow" />
         <div style={{position:'relative',zIndex:1}}>
           <div style={{display:'inline-flex',alignItems:'center',gap:8,background:'rgba(124,111,255,0.1)',border:'1px solid rgba(124,111,255,0.25)',borderRadius:100,padding:'7px 18px',fontSize:12,fontWeight:700,color:'#7c6fff',letterSpacing:.5,textTransform:'uppercase',marginBottom:32}}>
             <span className="pulse" style={{width:6,height:6,borderRadius:'50%',background:'#1ef5b0',display:'inline-block'}} />
-            November 28 launch · Verified beta
+            November 28 · Beta target
           </div>
           <h1 className="hero-h1" style={{fontSize:'5rem',fontWeight:900,lineHeight:1.02,letterSpacing:'-2px',maxWidth:900,margin:'0 auto 28px'}}>
             Imagine it. <span className="grad-text">Build it.</span><br/>
             Launch it. Run it.
           </h1>
-          <p style={{fontSize:'1.2rem',color:'#6b6b8a',maxWidth:560,margin:'0 auto 48px',lineHeight:1.7}}>
+          <p style={{fontSize:'1.2rem',color:'#9999b2',maxWidth:560,margin:'0 auto 48px',lineHeight:1.7}}>
             Create a real starter business concept and downloadable site with Surprise Me. Sign up for a workspace, and follow the independent AI Operator engine as live capabilities pass testing for our November 28 beta.
           </p>
           <div style={{display:'flex',gap:14,justifyContent:'center',flexWrap:'wrap',marginBottom:56}}>
             <Link href="/auth/signup" className="btn-primary" style={{padding:'16px 36px',fontSize:'1rem',boxShadow:'0 0 48px rgba(124,111,255,0.45)'}}>
               Start building free →
             </Link>
-            <Link href="/surprise-me" className="btn-ghost" style={{padding:'16px 32px',fontSize:'1rem'}}>✦ Surprise Me — $0 business</Link>
+            <Link href="/surprise-me" className="btn-ghost" style={{padding:'16px 32px',fontSize:'1rem'}}><Sparkles size={18} aria-hidden="true" style={{marginRight:8}} />Surprise Me</Link>
             <a href="#features" className="btn-ghost" style={{padding:'16px 32px',fontSize:'1rem'}}>
               See how it works
             </a>
           </div>
-          <div style={{display:'flex',alignItems:'center',gap:14,justifyContent:'center',color:'#6b6b8a',fontSize:13}}>
-            <div style={{display:'flex'}}>
-              {['J','S','M','K','R'].map((l,i)=>(
-                <div key={l} style={{width:32,height:32,borderRadius:'50%',border:'2px solid #060610',background:`linear-gradient(135deg,${['#7c6fff,#1ef5b0','#ff6b35,#f7c948','#38bdf8,#818cf8','#f472b6,#a855f7','#34d399,#059669'][i]})`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:800,color:'#fff',marginLeft:i?-8:0}}>{l}</div>
-              ))}
-            </div>
-            <span style={{color:'#f59e0b',fontSize:16}}>★★★★★</span>
-            <span>Explore the Base88 preview</span>
-          </div>
+          <p style={{color:'#9999b2',fontSize:13,lineHeight:1.6}}>Explore the starter preview. Live operator capabilities are subject to verification.</p>
         </div>
       </section>
 
@@ -89,21 +87,21 @@ export default function Home() {
         <div style={{textAlign:'center',marginBottom:64}}>
           <div style={{fontSize:11,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:'#7c6fff',marginBottom:12}}>Platform</div>
           <h2 style={{fontSize:'2.8rem',fontWeight:900,letterSpacing:'-1px',marginBottom:16}}>One AI business workspace. Built to earn your trust.</h2>
-          <p style={{color:'#6b6b8a',fontSize:'1.05rem',maxWidth:520,margin:'0 auto',lineHeight:1.7}}>Start with a working business idea and project export. Agent computers, secure connections, owner callbacks and payments activate only after end-to-end verification.</p>
+          <p style={{color:'#9999b2',fontSize:'1.05rem',maxWidth:520,margin:'0 auto',lineHeight:1.7}}>Start with a working business idea and project export. Agent computers, secure connections, owner callbacks and payments activate only after end-to-end verification.</p>
         </div>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(12,1fr)',gap:16}}>
+        <div className="feature-grid" style={{display:'grid',gridTemplateColumns:'repeat(12,1fr)',gap:16}}>
           {/* Card 1 — Main hero card */}
           <div className="bento-card" style={{gridColumn:'span 7'}}>
-            <div style={{width:52,height:52,borderRadius:16,background:'rgba(124,111,255,0.15)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}>🤖</div>
+            <div style={{width:52,height:52,borderRadius:16,background:'rgba(124,111,255,0.15)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}><Bot size={26} aria-hidden="true" /></div>
             <div style={{fontWeight:800,fontSize:'1.1rem',marginBottom:8,letterSpacing:'-.3px'}}>AI Agent Builder</div>
-            <div style={{fontSize:14,color:'#6b6b8a',lineHeight:1.6,marginBottom:20}}>Configure a named AI Operator with a clear goal. Background execution, connected accounts and 24/7 work require the independent backend, still undergoing deployment.</div>
+            <div style={{fontSize:14,color:'#9999b2',lineHeight:1.6,marginBottom:20}}>Configure a named AI Operator with a clear goal. Background execution, connected accounts and 24/7 work require the independent backend, still undergoing deployment.</div>
             <div style={{background:'rgba(0,0,0,0.3)',borderRadius:16,padding:20,border:'1px solid var(--border)'}}>
               <div style={{display:'flex',gap:10,marginBottom:12}}>
-                <div style={{width:28,height:28,borderRadius:'50%',background:'rgba(124,111,255,0.2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13}}>👤</div>
+                <div style={{width:28,height:28,borderRadius:'50%',background:'rgba(124,111,255,0.2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13}}><User size={16} aria-hidden="true" /></div>
                 <div style={{background:'rgba(124,111,255,0.12)',border:'1px solid rgba(124,111,255,0.2)',borderRadius:12,padding:'10px 14px',fontSize:13,lineHeight:1.5}}>Build me a customer support agent for my online store</div>
               </div>
               <div style={{display:'flex',gap:10}}>
-                <div style={{width:28,height:28,borderRadius:'50%',background:'linear-gradient(135deg,#7c6fff,#1ef5b0)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13}}>⚡</div>
+                <div style={{width:28,height:28,borderRadius:'50%',background:'linear-gradient(135deg,#7c6fff,#1ef5b0)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:13}}><Zap size={22} aria-hidden="true" /></div>
                 <div style={{background:'rgba(255,255,255,0.05)',border:'1px solid var(--border)',borderRadius:12,padding:'10px 14px',fontSize:13,lineHeight:1.5}}>Example response: <strong>ShopBot</strong> needs a verified store account and customer permissions before it can handle real orders or messages.</div>
               </div>
             </div>
@@ -111,38 +109,38 @@ export default function Home() {
           {/* Card 2 */}
           <div className="bento-card" style={{gridColumn:'span 5',display:'flex',flexDirection:'column',justifyContent:'space-between'}}>
             <div>
-              <div style={{width:52,height:52,borderRadius:16,background:'rgba(30,245,176,0.12)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}>⚡</div>
+              <div style={{width:52,height:52,borderRadius:16,background:'rgba(30,245,176,0.12)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}><Zap size={22} aria-hidden="true" /></div>
               <div style={{fontWeight:800,fontSize:'1.1rem',marginBottom:8}}>Downloadable starter projects</div>
-              <div style={{fontSize:14,color:'#6b6b8a',lineHeight:1.6}}>From idea to live agent in under a minute. No servers, no DevOps, no config hell.</div>
+              <div style={{fontSize:14,color:'#9999b2',lineHeight:1.6}}>Explore a business concept and export starter files for review. Hosted deployment and agent execution remain separate verification gates.</div>
             </div>
             <div style={{marginTop:24}}>
               <div style={{fontSize:'3.5rem',fontWeight:900,letterSpacing:'-2px',background:'linear-gradient(135deg,#7c6fff,#1ef5b0)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>ZIP</div>
-              <div style={{fontSize:14,color:'#6b6b8a'}}>testable starter files</div>
+              <div style={{fontSize:14,color:'#9999b2'}}>testable starter files</div>
             </div>
           </div>
           {/* Card 3 */}
           <div className="bento-card" style={{gridColumn:'span 4'}}>
-            <div style={{width:52,height:52,borderRadius:16,background:'rgba(251,146,60,0.12)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}>🗄️</div>
+            <div style={{width:52,height:52,borderRadius:16,background:'rgba(251,146,60,0.12)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}><Database size={25} aria-hidden="true" /></div>
             <div style={{fontWeight:800,fontSize:'1.1rem',marginBottom:8}}>Built-in Database</div>
-            <div style={{fontSize:14,color:'#6b6b8a',lineHeight:1.6}}>Private project storage is available only after the customer's authenticated database and permissions are connected.</div>
+            <div style={{fontSize:14,color:'#9999b2',lineHeight:1.6}}>Private project storage is available only after the customer's authenticated database and permissions are connected.</div>
           </div>
           {/* Card 4 */}
           <div className="bento-card" style={{gridColumn:'span 4'}}>
-            <div style={{width:52,height:52,borderRadius:16,background:'rgba(255,77,109,0.12)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}>🔌</div>
+            <div style={{width:52,height:52,borderRadius:16,background:'rgba(255,77,109,0.12)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}><Plug size={25} aria-hidden="true" /></div>
             <div style={{fontWeight:800,fontSize:'1.1rem',marginBottom:8}}>Integration roadmap</div>
-            <div style={{fontSize:14,color:'#6b6b8a',lineHeight:1.6}}>WhatsApp, Telegram, Gmail, Google Sheets, Slack, HitPay, PayNow, Stripe, and more.</div>
+            <div style={{fontSize:14,color:'#9999b2',lineHeight:1.6}}>WhatsApp, Telegram, Gmail, Google Sheets, Slack, HitPay, PayNow, Stripe, and more.</div>
           </div>
           {/* Card 5 */}
           <div className="bento-card" style={{gridColumn:'span 4'}}>
-            <div style={{width:52,height:52,borderRadius:16,background:'rgba(56,189,248,0.12)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}>📊</div>
+            <div style={{width:52,height:52,borderRadius:16,background:'rgba(56,189,248,0.12)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}><BarChart3 size={25} aria-hidden="true" /></div>
             <div style={{fontWeight:800,fontSize:'1.1rem',marginBottom:8}}>Real-time Analytics</div>
-            <div style={{fontSize:14,color:'#6b6b8a',lineHeight:1.6}}>See verified task receipts when the independent backend is connected. Preview activity is never shown as real execution.</div>
+            <div style={{fontSize:14,color:'#9999b2',lineHeight:1.6}}>See verified task receipts when the independent backend is connected. Preview activity is never shown as real execution.</div>
           </div>
           {/* Card 6 — SG */}
           <div className="bento-card" style={{gridColumn:'span 6',background:'linear-gradient(135deg,rgba(124,111,255,0.1),rgba(30,245,176,0.05))'}}>
-            <div style={{width:52,height:52,borderRadius:16,background:'rgba(124,111,255,0.15)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}>🇸🇬</div>
+            <div style={{width:52,height:52,borderRadius:16,background:'rgba(124,111,255,0.15)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}><Globe2 size={25} aria-hidden="true" /></div>
             <div style={{fontWeight:800,fontSize:'1.1rem',marginBottom:8}}>Built for Singapore</div>
-            <div style={{fontSize:14,color:'#6b6b8a',lineHeight:1.6,marginBottom:20}}>Built for Singapore customers, with SGD-friendly plans, privacy controls and local payment options on the integration roadmap.</div>
+            <div style={{fontSize:14,color:'#9999b2',lineHeight:1.6,marginBottom:20}}>Built for Singapore customers, with SGD-friendly plans, privacy controls and local payment options on the integration roadmap.</div>
             <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
               {['Singapore focus','SGD plans','Privacy first','Local payments planned'].map(l=>(
                 <span key={l} className="feature-pill">{l}</span>
@@ -151,13 +149,13 @@ export default function Home() {
           </div>
           {/* Card 7 — Automations */}
           <div className="bento-card" style={{gridColumn:'span 6'}}>
-            <div style={{width:52,height:52,borderRadius:16,background:'rgba(30,245,176,0.12)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}>🔁</div>
-            <div style={{fontWeight:800,fontSize:'1.1rem',marginBottom:8}}>Automations That Work</div>
-            <div style={{fontSize:14,color:'#6b6b8a',lineHeight:1.6,marginBottom:20}}>Plan recurring workflows, approvals and owner notifications. Provider-backed scheduling launches only after real worker verification.</div>
+            <div style={{width:52,height:52,borderRadius:16,background:'rgba(30,245,176,0.12)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:24,marginBottom:20}}><Repeat size={25} aria-hidden="true" /></div>
+            <div style={{fontWeight:800,fontSize:'1.1rem',marginBottom:8}}>Workflow automation</div>
+            <div style={{fontSize:14,color:'#9999b2',lineHeight:1.6,marginBottom:20}}>Plan recurring workflows, approvals and owner notifications. Provider-backed scheduling launches only after real worker verification.</div>
             <div style={{background:'rgba(0,0,0,0.3)',borderRadius:12,padding:14,border:'1px solid var(--border)'}}>
               <div style={{fontSize:11,color:'#1ef5b0',fontWeight:700,marginBottom:8,textTransform:'uppercase',letterSpacing:1}}>Illustrative workflow examples · not live</div>
-              {['⏰ Daily report → every morning 9am','📧 New signup → welcome email sent','💳 Payment → update records instantly'].map(l=>(
-                <div key={l} style={{fontSize:13,color:'#6b6b8a',marginBottom:4}}>{l}</div>
+              {['Daily report → every morning at 9 AM','New signup → draft a welcome email','Payment → update records after verification'].map(l=>(
+                <div key={l} style={{fontSize:13,color:'#9999b2',marginBottom:4}}>{l}</div>
               ))}
             </div>
           </div>
@@ -190,7 +188,7 @@ export default function Home() {
         <div style={{maxWidth:1100,margin:'0 auto',textAlign:'center'}}>
           <div style={{fontSize:11,fontWeight:800,letterSpacing:2,textTransform:'uppercase',color:'#7c6fff',marginBottom:12}}>Pricing</div>
           <h2 style={{fontSize:'2.5rem',fontWeight:900,letterSpacing:'-1px',marginBottom:16}}>Start free. Scale when you're ready.</h2>
-          <p style={{color:'#6b6b8a',fontSize:'1.05rem',maxWidth:480,margin:'0 auto 56px',lineHeight:1.7}}>Pricing is a proposal for the upcoming beta, not a live paid subscription or a promise of earnings.</p>
+          <p style={{color:'#9999b2',fontSize:'1.05rem',maxWidth:480,margin:'0 auto 56px',lineHeight:1.7}}>Pricing is a proposal for the upcoming beta, not a live paid subscription or a promise of earnings.</p>
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:20}}>
             {[
               {key:'free',name:'Free',price:'S$0',period:'/mo',desc:'Try it out. No strings attached.',features:['1 agent','25 AI credits total','Community support'],noFeatures:['Payments','Integrations','Priority support'],pop:false},
@@ -199,9 +197,9 @@ export default function Home() {
               {key:'agency',name:'Agency',price:'S$199',period:'/mo',desc:'For agencies building for clients.',features:['Unlimited agents','100,000 AI credits/mo','White-label','Dedicated support','Client management'],noFeatures:[],pop:false},
             ].map(p=>(
               <div key={p.key} className={`p-card${p.pop?' pop':''}`}>
-                <div style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:1,color:'#6b6b8a',marginBottom:8}}>{p.name}</div>
-                <div style={{fontSize:'2.8rem',fontWeight:900,letterSpacing:'-2px',lineHeight:1}}>{p.price}<span style={{fontSize:'1rem',fontWeight:400,color:'#6b6b8a'}}>{p.period}</span></div>
-                <div style={{fontSize:13,color:'#6b6b8a',margin:'12px 0 24px',lineHeight:1.5}}>{p.desc}</div>
+                <div style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:1,color:'#9999b2',marginBottom:8}}>{p.name}</div>
+                <div style={{fontSize:'2.8rem',fontWeight:900,letterSpacing:'-2px',lineHeight:1}}>{p.price}<span style={{fontSize:'1rem',fontWeight:400,color:'#9999b2'}}>{p.period}</span></div>
+                <div style={{fontSize:13,color:'#9999b2',margin:'12px 0 24px',lineHeight:1.5}}>{p.desc}</div>
                 <div style={{height:1,background:'var(--border)',marginBottom:24}} />
                 {p.features.map(f=><div key={f} className="p-feat"><span>✓</span><span>{f}</span></div>)}
                 {p.noFeatures.map(f=><div key={f} className="p-feat off"><span>✗</span><span>{f}</span></div>)}
@@ -218,24 +216,24 @@ export default function Home() {
       <section style={{padding:'120px 24px',textAlign:'center',position:'relative',overflow:'hidden'}}>
         <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)',width:600,height:400,background:'radial-gradient(ellipse,rgba(124,111,255,0.25) 0%,transparent 70%)',pointerEvents:'none'}} />
         <div style={{position:'relative',zIndex:1}}>
-          <h2 style={{fontSize:'4rem',fontWeight:900,letterSpacing:'-2px',lineHeight:1.05,marginBottom:24}}>
+          <h2 className="closing-title" style={{fontSize:'4rem',fontWeight:900,letterSpacing:'-2px',lineHeight:1.05,marginBottom:24}}>
             A real business starts with<br/>
             <span className="grad-text">a practical first step</span>
           </h2>
-          <p style={{fontSize:'1.1rem',color:'#6b6b8a',maxWidth:480,margin:'0 auto 48px',lineHeight:1.7}}>Don't get left behind. Explore a business idea with Surprise Me — no credit card required for the preview.</p>
+          <p style={{fontSize:'1.1rem',color:'#9999b2',maxWidth:480,margin:'0 auto 48px',lineHeight:1.7}}>Explore a business idea with Surprise Me — no credit card required for the preview.</p>
           <Link href="/auth/signup" className="btn-primary" style={{padding:'18px 48px',fontSize:'1.1rem',boxShadow:'0 0 80px rgba(124,111,255,0.5)'}}>
-            Build your agent free →
+            Create your workspace →
           </Link>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer style={{borderTop:'1px solid var(--border)',padding:'60px 48px 40px'}}>
+      <footer className="page-footer" style={{borderTop:'1px solid var(--border)',padding:'60px 48px 40px'}}>
         <div style={{maxWidth:1200,margin:'0 auto'}}>
-          <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr',gap:48,marginBottom:48}}>
+          <div className="footer-grid" style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr',gap:48,marginBottom:48}}>
             <div>
               <div style={{fontWeight:900,fontSize:'1.4rem',background:'linear-gradient(135deg,#7c6fff,#1ef5b0)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',marginBottom:12}}>Base88</div>
-              <p style={{color:'#6b6b8a',fontSize:13,lineHeight:1.6,maxWidth:240}}>An independent AI business-operator platform in development. Real capabilities, real receipts, honest status.</p>
+              <p style={{color:'#9999b2',fontSize:13,lineHeight:1.6,maxWidth:240}}>An independent AI business-operator platform in development. Real capabilities, real receipts, honest status.</p>
             </div>
             {[
               {title:'Product',links:[['Features','#features'],['Pricing','#pricing'],['Get started','/auth/signup'],['Login','/auth/login']]},
@@ -243,16 +241,16 @@ export default function Home() {
               {title:'Company',links:[['Roadmap','/launch'],['How Base88 works','#features'],['Account','/auth/signup']]},
             ].map(col=>(
               <div key={col.title}>
-                <div style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:1,color:'#6b6b8a',marginBottom:16}}>{col.title}</div>
+                <div style={{fontSize:12,fontWeight:700,textTransform:'uppercase',letterSpacing:1,color:'#9999b2',marginBottom:16}}>{col.title}</div>
                 {col.links.map(([label,href])=>(
-                  <a key={label} href={href} style={{display:'block',fontSize:14,color:'#6b6b8a',marginBottom:8,textDecoration:'none',transition:'color .15s'}} onMouseEnter={e=>(e.currentTarget.style.color='#e8e8f0')} onMouseLeave={e=>(e.currentTarget.style.color='#6b6b8a')}>{label}</a>
+                  <a key={label} href={href} style={{display:'block',fontSize:14,color:'#9999b2',marginBottom:8,textDecoration:'none',transition:'color .15s'}} onMouseEnter={e=>(e.currentTarget.style.color='#e8e8f0')} onMouseLeave={e=>(e.currentTarget.style.color='#6b6b8a')}>{label}</a>
                 ))}
               </div>
             ))}
           </div>
           <div style={{borderTop:'1px solid var(--border)',paddingTop:24,display:'flex',justifyContent:'space-between',flexWrap:'wrap',gap:12}}>
-            <p style={{fontSize:13,color:'#6b6b8a'}}>© 2026 Base88. Built in Singapore 🇸🇬 — Powered by obsession.</p>
-            <p style={{fontSize:12,color:'#6b6b8a'}}>Launching verified capabilities by November 28. No fabricated success claims.</p>
+            <p style={{fontSize:13,color:'#9999b2'}}>© 2026 Base88. Built in Singapore.</p>
+            <p style={{fontSize:12,color:'#9999b2'}}>November 28 beta target. Live capabilities require verification.</p>
           </div>
         </div>
       </footer>
